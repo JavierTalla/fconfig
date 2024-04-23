@@ -1,0 +1,1066 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Formato de los ficheros de configuración de la librería tallaearth</title>
+<style>
+/* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
+figcaption,figure,footer,header,hgroup,main,nav,section{display:block}
+html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",Sylfaen,serif;font-size:110%;font-weight:400;font-style:normal;
+		line-height:1.5;position:relative;cursor:auto;tab-size:4;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+abbr[title]{border-bottom:1px dotted}
+b,strong{font-weight:bold}
+dfn{font-style:italic}
+hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0}
+mark{background:#ff0;color:#000}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:80%}
+sub,sup{font-size:80%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img{border:0}
+figure{margin:0}
+textarea{overflow:auto;vertical-align:top;height:auto;min-height:50px}
+table{border-collapse:collapse;border-spacing:0}
+*,*:before,*:after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
+img,object{max-width:100%;height:auto;display:inline-block; vertical-align:middle}
+object{height:100%}
+.left{float:left!important}
+.right{float:right!important}
+.text-left{text-align:left!important}
+.text-right{text-align:right!important}
+.text-center{text-align:center!important}
+.text-justify{text-align:justify!important}
+.center{margin-left:auto; margin-right:auto}
+.spread{width:100%}
+a{color:#2156a5; text-decoration:none}
+a:active,a:hover{cursor:pointer; color:#1d4b8f}
+p{text-indent:1.5em;line-height:1.5;margin-top:0.8em;margin-bottom:0.8em;text-align:justify}
+p.continuar{text-indent:0} /*Para continuar el párrafo tras un elemento que implica un </p> pero que lógicamente se sitúa dentro del párrafo (un display).*/
+p.noindent{text-indent:0}
+h1,h2,h3,h4,#toctitle{font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:300;color:#a13321;margin-top:1em;margin-bottom:.5em;line-height:1.2}
+h1{font-family:Tahoma, Verdana, sans-serif; font-weight:500; font-size:3.5em; text-align:center; margin-top:2.25rem; margin-bottom:1em; counter-reset: h2-num}
+h2,#toctitle{font-size:2.3em; font-variant:small-caps; counter-increment: h2-num; counter-reset: h3-num}
+h3{font-size:1.6875em}
+h4{font-size:1.2em; color:black}
+h2:before{content: counter(h2-num) ".  "}
+hr{border:solid #ddddd8;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em;height:0}
+small{font-size:70%;line-height:inherit}
+ul,ol,dl{margin-top:1em;margin-bottom:1em;list-style-position:outside;font-family:inherit}
+dl{margin-top:1.25em;}
+ul,ol{margin-left:1.5em}
+ul.square li ul,ul.circle li ul,ul.disc li ul{list-style:inherit}
+ul li ul, ul li ol, ol li ul, ol li ol{margin-left:-0.5em; margin-bottom:0; margin-top:0;}
+dl dt{margin-bottom:.3125em;font-weight:bold}
+dl dd{margin-bottom:1.25em; margin-left:1.125em}
+dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
+ol>li p,ul>li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:0.625em}
+ul.circle{list-style-type:circle}
+ul.disc{list-style-type:disc}
+ul.no-bullet{list-style:none}
+ol.arabic{list-style-type:decimal}
+code,lit{font-family:Consolas,Calibri,monospace;font-size:89%}
+code{background-color:#f7f7f8}
+table.code td{font-family:Consolas,Calibri,monospace;font-size:89%;color:rgba(0,0,0,.9);background:#f7f7f8;}
+.exampleblock{margin-top:1.25em;margin-bottom:1.25em;white-space:inherit;font-family:Consolas,Calibri,monospace;font-size:89%;padding:.1em .5ex;background-color:#f7f7f8;}
+em em{font-style:normal}
+#header,#content,#footnotes,#footer{width:100%;margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0;max-width:50em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
+table{max-width:120%; margin-bottom:1.25em;}
+table thead,table tfoot{font-weight:bold;text-align:center}
+table thead{border-bottom:double 3px black}
+table tfoot{border-top:solid 1px #000}
+tbody{text-align:left; vertical-align:text-top}
+tbody tr th{display:table-cell;line-height:1.6;font-weight:bold}
+tr{padding-top:0.5em;padding-bottom:0.15em}
+tr td,tr th{padding-left:0.6em;padding-right:0.6em}
+table.grid tr{padding-top:0.05em}
+table.grid td{margin-right:1em}
+table.frame-topbot{border-width:1px 0}
+th.halign-left,td.halign-left{text-align:left}
+th.halign-right,td.halign-right{text-align:right}
+th.halign-center,td.halign-center{text-align:center}
+th.valign-top,td.valign-top{vertical-align:top}
+th.valign-bottom,td.valign-bottom{vertical-align:bottom}
+th.valign-middle,td.valign-middle{vertical-align:middle}
+#header:before,#header:after,#content:before,#content:after,#footer:before,#footer:after{content:" ";display:table}
+#header:after,#content:after,#footnotes:after,#footer:after{clear:both}
+#content{margin-top:1.25em}
+#content:before{content:none}
+#Índice{border-bottom:1px solid #efefed;padding-bottom:.5em}
+#Índice>ul, #Índice>ol, #Índice>table ol{margin-left:0em}
+#Índice ol.sectlevel0>li>a{font-style:italic}
+#Índice ol.sectlevel0 ol.sectlevel1{margin:.5em 0}
+#Índice li{line-height:1.3334;margin-top:.3334em}
+#Índice a{text-decoration:none}
+#content #Índice{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;border-radius:4px}
+#content #Índice>:first-child{margin-top:0}
+#content #Índice>:last-child{margin-bottom:0}
+#footer{padding:1em}
+#footer-text{color:rgba(0,0,0,.6);line-height:1.44}
+link{color:#ba3925;text-decoration:none}
+link:hover{color:#a53221}
+.big{font-size:larger}
+.small{font-size:smaller}
+.underline{text-decoration:underline}
+.overline{text-decoration:overline}
+.line-through{text-decoration:line-through}
+.exampleblock>.content{background-color:#fffef7;border-color:#e0e0dc;-webkit-box-shadow:0 1px 4px #e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+</style>
+</head>
+
+<body>
+
+<div id="header">
+<h1>Formato de los ficheros config de 3dCarving</h1>
+<p class="text-center">Actualizado a 2024 / marzo / 26</p>
+</div>
+
+<div id="content">
+
+<div id="Índice">
+<div id="toctitle">Índice</div>
+
+<ol>
+<li><a href="#Introducción">Introducción</a>
+<li><a href="#Asignaciones y expansiones. Objetos">Asignaciones y expansiones. Objetos</a>
+	<ul>
+		<li><a href="#Asignaciones">Asignaciones</a>
+		<li><a href="#Variables difíciles de definir">Variables &ldquo;difíciles&rdquo; de definir</a>
+		<li><a href="#Variable completamente expandida">Variable completamente expandida</a>
+		<li><a href="#Tipos de valores">Tipos de valores</a>
+		<li><a href="#Expansiones">Expansiones</a>
+		<li><a href="#Ejemplos">Ejemplos</a>
+		<li><a href="#Variables dentro de nombres de variables">Variables dentro de nombres de variables</a>
+	</ul>
+<li><a href="#Asignaciones y expansiones. Funciones">Asignaciones y expansiones. Funciones</a>
+	<ul>
+		<li><a href="#Funciones.Asignaciones">Asignaciones</a>
+		<li><a href="#Funciones.Expansiones">Expansiones</a>
+	</ul>
+<li><a href="#Palabras clave">Lista de palabras clave</a>
+<li><a href="#Comandos de log">Comandos de log</a>
+<li><a href="#Debug">Debug</a>
+<li><a href="#Control de flujo">Control de flujo incondicional</a>
+<li><a href="#Condicionales">Condicionales</a>
+	<ul>
+		<li><a href="#Ifdef">Ifdef, Ifndef, Ifempty</a>
+		<li><a href="#If">If, Elif</a>
+	</ul>
+<li><a href="#Manejo de variables">Manejo de variables</a>
+<li><a href="#Otros comandos">Otros comandos</a>
+</ol>
+
+</div><!-- Índice></!-->
+
+
+<h2 id="Introducción">Introducción</h2><div>
+<p>Los ficheros config tienen por fin definir un conjunto de pares clave / valor. Por ello constan principalmente
+de asignaciones de variables, por ejemplo <code>modo = draft</code>. También reconoce ciertos comandos.
+Por ejemplo, para incluir un fichero desde otro fichero se emplea el comando <lit>include</lit>:
+<div class="exampleblock">
+include useropts.config
+</div>
+<p class=continuar>Además implementa un pequeño lenguaje de macros.
+
+<p>El parseador mira la primera palabra de cada línea. Si es una palabra reconocida ejecuta la correspondiente acción;
+si no, ha de tratarse de una asignación. Si no es una palabra reconocida ni hay un signo&nbsp;<code>=</code>, la línea
+se ignora.
+<p>El carácter de comentario es&nbsp;% siempre que no esté en medio de una palabra. Exactamente, se considera
+que introduce un comentario si aparece al principio de la línea o precedido de espacio o tabulación, o inmediatamente
+tras el signo&nbsp;<code>=</code> de una asignación. En medio de una palabra se considera como parte de la palabra.
+
+</div><!-- h2. Introducción></!-->
+
+
+<h2 id="Asignaciones y expansiones. Objetos">Asignaciones y expansiones. Objetos</h2><div>
+
+Un objecto es una variable que, para expandirse, no recibe argumentos. Su cadena de reemplazo es un texto fijo.
+
+<h3 id="Asignaciones">Asignaciones</h3><div>
+<p>Hay dos modos de asignar:</p>
+<div class="exampleblock">
+	<i>var</i> = <i>value</i><br>
+	<i>var</i> := <i>value</i>
+</div>
+
+<p>La segunda de las formas copia literalmente la cadena de texto <code><i>value</i></code> como valor de
+la variable <i>var</i>. La primera forma expande las variables presentes en <code><i>value</i></code>. El resultado
+se asigna a la variable <i>var</i>.
+
+<p>El texto tras el igual se comienza a parsear en el primer carácter que no sea un blanco (espacio o
+tabulación) y se eliminan los blancos finales (para esto un comentario es como si no existiera).
+
+<p>En caso de una asignación&nbsp;<code>=</code> ó&nbsp;<code>:=</code>, si el primer carácter
+de la primera palabra tras el signo&nbsp;<code>=</code> es una llave de apertura:&nbsp;<code>{</code>,
+El texto a asignar comenzará en el carácter siguiente a dicha llave, y terminará en el carácter anterior a
+la última llave de cierre&nbsp;<code>}</code> que haya en la línea (excluyendo un posible comentario;
+es decir, un comentario sigue siendo un comentario). Si la asignación es&nbsp;<code>=</code>, el texto
+entre las cadenas se expande.
+<p>Esta es la manera de incluir espacios iniciales o finales en el texto de reemplazo de una variable.
+<div class="exampleblock">
+	a= { s }<br>
+	a= { }<br>
+</div>
+
+<p>Si <code><i>value</i></code> comienza por&nbsp;<code>{</code> pero no hay ninguna
+llave&nbsp;<code>}</code> de cierre en la línea, el texto asignado a la variable comienza en la
+siguiente línea y se extiende hasta una línea cuyo primer carácter no blanco sea&nbsp;<code>}</code>,
+que no se incluye. Cada línea se parsea como se haría en una asignación de una única línea. Por ejemplo
+<div class="exampleblock">
+	empty={}<br>
+	comment={%}<br>
+	a= { Texto ignorado<br>
+	&emsp;El siguiente comentario no se incluye: %este texto no se incluye<br>
+	&emsp;$(empty)    Para incluír espacios empezamos la línea con $$(empty)<br>
+	&emsp;Y para incluír un carácter $(comment) empleamos $$(comment)<br>
+	&emsp;<br>
+	x<br>
+	<br>
+	}
+</div>
+<p class="continuar">La expansión de&nbsp;a será
+<div class="exampleblock">
+El siguiente comentario no se incluye:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Para incluír espacios empezamos la línea con $(empty)<br>
+Y para incluír un carácter % empleamos $(comment)<br>
+<br>
+x<br>
+</div>
+
+<p>Para evitar el último salto de línea ha de cerrarse con "}n".
+<div class="exampleblock">
+	a= { Texto ignorado<br>
+Pimera linea<br>
+Segunda línea<br>
+	}n<br>
+	b=xxx$(a)yyy
+</div>
+<p class="continuar">La expansión de&nbsp;b será
+<div class="exampleblock">
+	xxxPimera linea<br>
+Segunda líneayyy
+</div>
+	</div>
+
+<h3 id="Variables difíciles de definir">Variables &ldquo;difíciles&rdquo; de definir</h3><div>
+
+<p>Si se quiere una variable cuya expansión sea un espacio, carácter&nbsp;<code>%</code>, una llave
+de apertura, una llave de cierre o un salto de línea hágase respectivamente:
+<div class="exampleblock">
+	C={ }<br>
+	C={%}<br>
+	C={{}<br>
+	C={}}<br>
+	C={<br>
+	<br>
+	}
+</div>
+
+<p>Para una expansión vacía puede dejarse el valor en blanco o escribir <code>{}</code>:
+<div class="exampleblock">
+	C= <br>
+	C=     %Los espacios antes del comentario se eliminan<br>
+	C={}<br>
+</div>
+</div>
+
+<h3 id="Variable completamente expandida">Variable completamente expandida</h3><div>
+<p>En algunos casos el programa tiene que mirar si una variable está <i>completamente expandida</i> o no.
+Se dice que una variable está completamente expandida cuando su texto de reemplazo no incluye ningún
+carácter o secuencia con un significado especial; por ejemplo <code>$(<i>var</i>)</code>, en la que el
+signo <code>$</code> signifca &laquo;expandir lo que siga&raquo;. Puede incluir esas secuencias si los
+caracteres normalmente especiales no tienen ese significado, como por ejemplo un <code>$</code>
+que proceda de la expansión de <code>$$</code>.
+</div>
+
+<h3 id="Tipos de valores">Tipos de valores</h3><div>
+<p>Los valores asignados a una clave se tratan generalmente como strings; o sea, no se interpretan.
+No obstante, algunas veces es necesario interpretarlos, por ejemplo cuando se quieren comparar
+dos magnitudes para un <lit>if</lit>. El valor de una clave, ya completamente expandida, puede
+interpretarse como de alguno de los siguientes tipos:
+
+	<p><lit>&emsp;string&emsp;bool&emsp;entero&emsp;medida&emsp;float</lit></p>
+
+<p>Es posible forzar un tipo en particular mediante el comando <a href="#type"><lit>type</lit></a>.
+Normalmente no es necesario porque el parseador, cuando necesita interpretar un valor, adjudica el
+tipo adecuado automáticamete. Las posibles formas que ha de tener una cadena de texto para intepretarse
+según uno u otro tipo son las siguientes:
+
+<p class="noindent">&bull;&ensp;<lit>bool</lit>:&emsp;<code>Si</code>, <code>Sí</code>, <code>No</code>, <code>!<i>bool</i></code>
+<p class="continuar">En la última variante, <code><i>bool</i></code> es a su vez un valor booleano y el
+símbolo&nbsp;<code>!</code> que precede (sin espacio de sepación) hace que se tome el contrario de lo indicado
+en <code><i>bool</i></code>. Por ejemplo, <code>!Sí</code> o <code>!!No</code>. Ambos equivalen
+a&nbsp;<code>No</code>.
+
+<p>La razón de existir de esta variante está en su empleo con variables. Por ejemplo:
+<div class="exampleblock">
+	debug=Sí<br>
+	ficheros.raster.agua=!$(debug)
+</div>
+
+<p class="noindent">&bull;&ensp;<lit>entero</lit>:&ensp;Un número entero sin signo.
+<div class="exampleblock">
+	n= 40<br>
+	m= 028<br>
+	s= 0
+</div>
+
+<p class="noindent">&bull;&ensp;<lit>medida</lit>:&emsp;<code><i>número</i> {dmm,mm,cm,m}</code>.
+<div class="exampleblock">
+	x= 40 mm<br>
+	y= 2.8 cm<br>
+	z= -2.5 m<br>
+	...
+</div>
+<p class="continuar">La medida se guarda como un entero en&nbsp;dmm. Así, en los valores de <lit>x</lit>,
+<lit>y</lit>, <lit>z</lit> en el anterior ejemplo, si tipados como una medida, se guardarán como 400, 2800
+y -25000 respectivamente.
+
+<p class="noindent">&bull;&ensp;<lit>float</lit>:&ensp;Un número posiblemente con decimales.
+<div class="exampleblock">
+	f= 60<br>
+	f= -28<br>
+	f= -4.02<br>
+	f= .333<br>
+	...
+</div>
+<p class="continuar">En caso de que sea el parseador el que automáticamente tipe el string, si puede ser
+un entero se tipará como entero y si comienza con '<lit>.</lit>' se tipará como string. En estos casos, si
+se quiere forzar que sea <lit>float</lit>, ha de emplearse el comando <a href="#type"><lit>type</lit></a>.
+
+<p>El string siempre se mantiene; es decir, el tipado añade un valor a la par que el string (si el tipado no es
+a <lit>string</lit>), y el string original no se olvida. A la hora de expandir la variable podrá expandirse el
+string o el valor, según se desee.
+</div>
+
+<h3 id="Expansiones">Expansiones</h3><ulist>
+
+<h4>Modos de expandir un texto</h4>
+
+<p>Hay dos modos de expandir un texto: <i>Según las reglas</i> y <i>Expansión total</i>. El primero se
+desarrolla, como su nombre indica, según las reglas de expansión descritas en esta sección. Esto puede dejar
+el texto, una vez expandido, de manera que en él aún haya comandos de expansión sin ejecutar. En particular,
+esto puede suceder como resultado de las expansiones de <code>${<i>...</i>}</code> y <code>$[<i>...</i>]{[<i>...</i>]}</code>.
+En algunos casos es necesario expandir por completo un texto, por ejemplo cuando forma parte del nombre
+de una variable (v. <a href="#Variables dentro de nombres de variables">Variables dentro de nombres de variables</a>).
+En estos casos se lleva a cabo la <lit>expansión total</lit>.
+
+<h4>Expansiones $(var) y ${var} de una variable</h4>
+
+<p>Hay dos formas principales de expandir una variable:
+<div class="exampleblock">
+	$(<i>var</i>)<br>
+	${<i>var</i>}
+</div>
+
+<p>La primera expande <code><i>var</i></code>, y luego procesa el resultado de la expansión para expandir
+las variables que hayan aparecido. La segunda provoca una única expansión de <code><i>var</i></code>, sin
+posterior reprocesado. Si no existe ninguna variable de nombre <code><i>var</i></code> la expansión es
+una cadena vacía. En una <lit>expansión total</lit> la expansión <code>${<i>var</i>}</code> se trata como
+si fuera <code>$(<i>var</i>)</code>.
+
+<p>En un texto expandido los caracteres&nbsp;<code>%</code> no tienen ningún significado especial.
+<p>Si se está expandiendo un texto, la secuencia&nbsp;<code>$$</code> se expande a un único&nbsp;<code>$</code>,
+que no se considera para posteriores expansiones.
+<div class="exampleblock">
+	a:=$$ &emsp;&emsp;&emsp;&emsp;&emsp;&ensp; % a= $<br>
+	b=$(a)(var) &ensp; % b= $(var)<br>
+	c=$(b) &emsp;&emsp;&emsp;&emsp;&emsp; % c= $(var)<br>
+	c=$$(a) &emsp;&emsp;&emsp;&emsp; % c= $(a)<br>
+	c=$(c) &emsp;&emsp;&emsp;&emsp;&emsp; % c= $(a)
+</div>
+
+<h4 id="Expansión ang">Expansión $&lang;var&rang; de una variable</h4>
+
+<p>Hay un modo de expansión más:
+<div class="exampleblock">
+	$<<i>var</i>>
+</div>
+<p>Para expandir esto en primer lugar se mira si la variable <i>var</i> ya está
+<a href="#Variable completamente expandida">completamente expandida</a>. En caso de que no esté
+completamente expandida el resultado de <code>$<<i>var</i>></code> es el texto de reemplazo de la variable
+<i>var</i>, eliminando el significado especial de cualquier carácter (de momento, solamente <lit>$</lit>).
+<p>Si el texto de reemplazo de <i>var</i> ya está completamente expandido se intenta parsear ese texto
+como un valor booleano, un número entero, una medida con unidades o un float. Las respectivas formas son
+incompatibles salvo por que un entero también podría ser float. En este último caso se parsea como entero.
+Un texto que comience por '<lit>.</lit>' <i>no</i> se intenta parsear como float. Si el texto no se puede
+parsear como ninguno de esos tipos, se le asigna el tipo <lit>string</lit>. En cualquier caso, el tipo y
+(si no es <lit>string</lit>) el resultado del parseo se recuerda para posteriores apariciones de
+<code>$<<i>var</i>></code> (si el tipo es <lit>string</lit> no hay ningún valor que sea necesario recordar).
+
+<p>Si el tipado ha tenido éxito para algún tipo que no sea <lit>string</lit> se expande el valor
+correspondiente, que puede no coincidir con el texto de la definición. Por ejemplo:
+<div class="exampleblock">
+	a=!Si <br>
+	b=$&lang;a&rang; &emsp; %b= No<br>
+	a=3.2 cm<br>
+	b=$&lang;a&rang; &emsp; %b= 320 dmm
+</div>
+<p class="continuar">Si el parseado ha asignado el tipo <lit>string</lit>, se expande la cadena de texto <i>var</i>
+literalmente, igual que si fuese <code>${<i>var</i>}</code> y, como solo se intenta tipar si la variable ya estaba
+completamente expandida, el resultado va a ser el mismo que si fuese<code>$(<i>var</i>)</code>.
+
+<h4 id="Expansión []">Expansiones $[texto][n] y $[texto]{[n]}</h4>
+
+<div class="exampleblock">
+	$[<i>texto</i>][<i>n</i>]<br>
+	$[<i>texto</i>]{[<i>n</i>]}<br>
+	$[<i>texto</i>][<i>-n</i>]<br>
+	$[<i>texto</i>]{[<i>-n</i>]}
+</div>
+
+<p>Expande <code><i>texto</i></code> según las reglas. En las dos primeras variantes, del resultado
+selecciona la palabra <i>n</i>-ésima, descartando todas las demás; la primera palabra es la&nbsp;1. En
+las otras dos variantes selecciona la palabra <i>n</i>-ésima comenzando a contar por el final. Si índice
+es&nbsp;0 o mayor que el número de palabras presentes la expansión es vacía. En caso contrario, si la forma
+era <code>{[<i>n</i>]}</code> o <code>{[<i>-n</i>]}</code> esa palabra es el resultado final; si la forma
+era <code>[<i>n</i>]</code> o <code>[<i>-n</i>]</code>, la palabra seleccionada se sigue expandiendo
+según las reglas y esa expansión completa será el resultado.
+<p><code><i>n</i></code> se expande completamente y el resultado ha de poder parsearse como un número
+entero. Además, ha de ser &lt;&nbsp;10.000.
+
+</div><!-- Expansiones></!-->
+
+<h3 id="Ejemplos">Ejemplos</h3><div>
+<div class="exampleblock">
+	a=1<br>
+	b:=$(a)<br>
+	c=$(b) - ${b} &emsp; % c queda definido como &ldquo;1 - $(a)&rdquo;<br>
+	c=$(c) &emsp; % Ahora c es &ldquo;1 - 1&rdquo;<br>
+	b=$(b) &emsp; % Ahora b es &ldquo;1&rdquo;<br>
+	d=$(d) &emsp; % d no estaba definido. Por tanto d se está definiendo como la cadena vacía.<br>
+	d=${d} &emsp; % Cadena vacía. Lo mismo que d=$(d).<br>
+	d:=${d}<br>
+	d=$(d) &emsp; % $(d) -> ${d} -> ${d} y ya no se expande más, porque la expansión<br>
+	&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; % de un ${<i>var</i>} no se expande.<br>
+	d:=$(d)<br>
+	d=$(d) &emsp; % Bucle infinito.<br>
+</div>
+<div class="exampleblock">
+	tex=a $$(b) &emsp; % tex = a $(b)<br>
+	b=BBB<br>
+	c:= $(b)<br>
+	pt= P $[$(tex)][0] | $[$(tex)][1] $[$(tex)][2] | $[$(tex)][3] P &emsp; % pt = P&nbsp;&nbsp;| a $(b) |&nbsp;&nbsp;P<br>
+	pB=$[$(c)][1] &emsp;&emsp;&nbsp; % pB = BBB<br>
+	pb=$[${c}]{[1]} &emsp; % pb = $(b)<br>
+	pb=$[${c}][1] &emsp;&emsp;&nbsp; % pb = BBB<br>
+	v=3<br>
+	p11=$[1 2 3 4 5 6 7 8 9 10 a b c d e][ 1$[5 4 1 2][$(v)] ] &emsp; % p11 = 1a<br>
+	pc=$[a b c][-1] &emsp; % pc = c<br>
+</div><!-- Ejemplos></!-->
+
+<h3 id="Variables dentro de nombres de variables">Variables dentro de nombres de variables</h3><div>
+
+<p>Se permiten variables dentro del nombre de otras variables, como en
+<div class="exampleblock">
+	a=$(d$(xx)lf)
+</div>
+<p class="continuar">Esto es útil cuando se quiere asignar a una variable un elemento de entre una lista, y el
+elemento en cuestión a su vez viene definido por una variable:
+<div class="exampleblock">
+	a:=$($(xx).color) &emsp; % := para que xx no se expanda todavía<br>
+	A.color=20<br>
+	B.color=30<br>
+	C.color=5<br>
+	xx=C<br>
+	a=$(a)&emsp; % $(a) -> $($(xx).color) -> $(C.color) -> 5
+</div>
+</p>
+
+</div><!-- h3. Variables dentro de nombres de variables><!-->
+</div><!-- h2. Asignaciones y expansiones, Objectos></!-->
+
+
+<h2 id="Asignaciones y expansiones. Funciones">Asignaciones y expansiones. Funciones</h2><div>
+
+Una función es una variable que, para expandirse, recibe argumentos. Su cadena de reemplazo incluirá
+esos argumentos en algunas posiciones.
+
+<h3 id="Funciones.Asignaciones">Asignaciones</h3><div>
+
+<p>Una definición de una función se reconoce por la presencia de un par <code>()</code> tras el nombre:
+<div class="exampleblock">
+	func(x, arg2) = <i>texto de reemplazo</i><br>
+	func(x, arg2) := <i>texto de reemplazo</i>
+</div>
+
+En el texto de reemplazo los argumentos se identifican por <code>#</code> seguido del nombre
+del argumento entre paréntesis o, si consta de un unico carácter, opcionalmente sin paréntesis:
+<div class="exampleblock">
+	func(nombre, x) = <i>El objeto #(nombre) tiene por valor #x. Se empleará #(x).</i><br>
+</div>
+<p>En el caso de una asignación <lit>=</lit> (frente a <lit>:=</lit>, que no expande) primero se
+identifican los <lit>#</lit> y después se expanden las macros que haya en el texto de reemplazo.
+Por ello signos&nbsp;<lit>#</lit> que aparezcan como consecuencia de ese reemplazo no tienen
+ningún significado especial.
+
+<p>Es posible que algunos argumentos no tengan nombre, en cuyo caso no se podrán emplear
+en el texto de reemplazo. También una función puede no tener ningún argumento:
+<div class="exampleblock">
+	func(a,,c,) = El primer argumento es #a, el tercero es #c, y el segundo y el cuarto, no se sabe.<br>
+	func() = La macro func no tiene argumentos.
+</div>
+
+</div><!--h3. Asignaciones><!-->
+
+<h3 id="Funciones.Expansiones">Expansiones</h3><div>
+
+Una función se invoca como se muestra a continuación:
+<div class="exampleblock">
+	func(nombre, x) = #(nombre) "#x".<br>
+	a= Por defecto se empleará $func(estilo, simple)<br>
+	b= Si se quiiere, puede emplearse $(func)(estilo, personalizado)
+</div>
+
+<p>Como puede verse, los paréntesis acotando el nombre de la función no son necesarios. Si
+un&nbsp;<code>$</code> no va segudo de un paréntesis de apertura se interpreta que el
+nombre que sigue es el de una función (no puede ser el de un objeto) y dicho nombre queda
+limitado por el paréntesis de apertura de la lista de argumentos.
+
+<p>Si una función se expande con los paréntesis <lit>{}</lit>, su expansión es el texto de
+reemplazo con los argumentos substituídos:
+<div class="exampleblock">
+	func(nombre, x) = #(nombre) "#x".<br>
+	a= Para este trabajo se empleará ${func}(estilo, $(estilo))<br>
+	%La expansión de ${func} es: Para este trabajo se empleará estilo "$(estilo)".
+</div>
+
+<p>Para las funciones no se permiten expansiones <lit>$&lt;<i>var</i>&gt;</lit>.
+
+</div><!--h3. Expansiones><!-->
+</div><!-- h2. Asignaciones y expansiones. Funciones></!-->
+
+
+<h2 id="Palabras clave">Lista de palabras clave</h2><div>
+
+<p>Las palabras clave se reconocen al principio de línea. Son las siguientes:</p>
+<br>
+
+<div style="margin-left:-8%; margin-right:-8%">
+<table><tr style="vertical-align:text-top;">
+
+<td width="50%">
+
+<table>
+<thead><tr><td colspan="2">Control de flujo incondicional</tr></thead>
+<tbody>
+<tr><td><a href="#include">include</a>	<td>Incluír un fichero desde otro
+<tr><td><a href="#jump">jump</a>				<td>Saltar a un fichero desde otro
+<tr><td><a href="#stop">stop</a>				<td>Terminar
+<tr><td><a href="#AtEnd">AtEnd</a>		<td>Guardar una línea para procesar al final
+<tr><td><a href="#BeginAtEnd">BeginAtEnd</a>&emsp;&nbsp;	<td>Guardar un bloque para el final; inicio
+<tr><td><a href="#BeginAtEnd">EndAtEnd</a>		<td>Guardar un bloque para el final; fin
+</tbody>
+</table>
+
+<table>
+<thead><tr><td colspan="2">Condicionales</tr></thead>
+<tbody>
+<tr><td><a href="#If">If</a>					<td>Genérico
+<tr><td><a href="#Ifdef">Ifdef</a>		<td>Si definido
+<tr><td><a href="#Ifdef">Ifndef</a>	<td>Si no definido
+<tr><td><a href="#Ifdef">Ifempty</a>&emsp;&nbsp;	<td>Si vacío
+<tr><td><a href="#If">Elif</a>				<td>Continuación; genérico
+<tr><td><a href="#Condicionales">Else</a>		<td>Úlltimo bloque
+<tr><td><a href="#Condicionales">Endif</a>	<td>Fin de condicional
+</tbody>
+</table>
+
+<table>
+<thead><tr><td colspan="2">Debug</tr></thead>
+<tbody>
+<tr><td><a href="#echo">echo</a>					<td>Escribir un mensaje
+<tr><td><a href="#echo">Echo</a>					<td>Escribir un mensaje
+<tr><td><a href="#error warning">error</a>					<td>Escribir un mensaje de error
+<tr><td><a href="#error warning">warning</a>			<td>Escribir un warning
+<tr><td><a href="#error warning">formatmsg</a>&emsp;&nbsp;	<td>Si formatear mensajes de error y warning
+<tr><td><a href="#show">show</a>				<td>Mostrar el valor de una variable
+<tr><td><a href="#showall">showall</a>		<td>Mostrar todas las variables
+<tr><td><a href="#dump">dump</a>				<td>Volcar todas las variables a un fichero
+</tbody>
+</table>
+
+</td>
+
+<td width="50%">
+
+<table>
+<thead><tr><td colspan="2">Log</tr></thead>
+<tbody>
+<tr><td><a href="#logging">logging</a>					<td>Activar o desactivar el logging
+<tr><td><a href="#logonline">logonline</a>			<td>Activar o desactivar el logging online
+<tr><td><a href="#loggingall">loggingall</a>			<td>Todo
+<tr><td><a href="#loggingall">loggingnone</a>		<td>Nada
+<tr><td><a href="#loggingall">loggingdefault</a>&emsp;&nbsp;	<td>Logging por defecto
+<tr><td><a href="#logfiles">logfiles</a>					<td>Ficheros abiertos y cerrados
+<tr><td><a href="#logerrors">logerrors</a>				<td>Errores de parseado
+<tr><td><a href="#logcommands">logcommands</a>	<td>Comandos
+<tr><td><a href="#logassigns">logassigns</a>			<td>Asignación de variables
+<tr><td><a href="#logbranches">logbranches</a>		<td>Condicionales
+<tr><td><a href="#logmacros">logmacros</a>			<td>Macros expandidas
+</tbody>
+</table>
+
+<table>
+<thead><tr><td colspan="2">Manejo de variables</tr></thead>
+<tbody>
+<tr><td><a href="#remove">remove</a>		<td>Eliminar una variable
+<tr><td><a href="#type">type</a>					<td>Tipar una variable
+<tr><td><a href="#cleanspaces">cleanspaces</a>	<td>Limpiar los espacios en una variable
+<tr><td><a href="#copyroot">copyroot</a>&emsp;&nbsp;		<td>Copiar todas las variables de una<br> cierta raíz
+</tbody>
+</table>
+
+<table>
+<thead><tr><td colspan="2">Otros comandos</tr></thead>
+<tbody>
+<tr><td><a href="#FILE">FILE</a>					<td>Establecer el nombre del fichero
+<tr><td><a href="#LINE">LINE</a>				<td>Establecer el número de línea
+<tr><td><a href="#ParseIf">ParseIfNotDef</a>&emsp;&nbsp;	<td>Asignación condicional
+<tr><td><a href="#ParseIf">ParseIfEmpty</a>			<td>Asignación condicional
+<tr><td><a href="#Override">ModoOverride</a>	<td>Permitir o no redefinir variables
+</tbody>
+</table>
+
+</td>
+
+</table>
+</div>
+</div> <!-- h2 Palabras clave><!-->
+
+
+<h2 id="Comandos de log">Comandos de log</h2><div>
+
+<p>Todos los comandos de log que admitan una palabra a continuación, por ejemplo <code>on</code>,
+<code>off</code>, <code>0</code> o <code>1</code>, expanden la línea que hay a continuación del
+comando. Así, es posible escribir
+<div class="exampleblock">
+estado = on<br>
+logging $(estado)
+</div>
+
+<dl>
+<dt id="logging">logging</dt>
+	<dd><code>logging {on, off}</code>
+
+<p>Enciende o apaga el logging. Si se apaga, cuando se vuelva a encender se reanudará con la configuración que tenga.
+</dd>
+
+<dt id="logonline">logonline</dt>
+	<dd><code>lologonlineging [on, off]</code>
+
+<p>Activa o apaga el logging online, además de al fichero de log. Si el loging general se apaga: <code>logging off</code>,
+este también se apaga. El logging online se envía a <lit>stderr</lit>.
+</dd>
+
+<dt id="loggingall">loggingall, loggingnone, loggingdefault</dt>
+	<dd><code>loggingall</code><br>
+		<code>loggingnone</code><br>
+		<code>loggingdefault</code>
+
+<p>Activa todo el log; desactiva todo el log; vuelve el log a la configuración por defecto. En la configuración
+por defecto está activo el log de ficheros abiertos y cerrados y el de errores y warnings de parseado.
+</dd>
+
+<dt id="logfiles">logfiles</dt>
+	<dd><code>logfiles = {0, 1}</code>
+
+<p>Ficheros que se van incluendo a través de comandos <lit>include</lit> o <lit>jump</lit>. Se indica su
+apertura y su cierre.
+</dd>
+
+<dt id="logerrors">logerrors</dt>
+	<dd><code>logerrors = {0, 1, 2}</code>
+
+<p>Si &ge;&nbsp;1, se muestran los errores de parseado; si &ge;&nbsp;2, los warnings.
+</dd>
+
+<dt id="logcommands">logcommands</dt>
+	<dd><code>logcommands = {0, 1, 2}</code>
+
+<p>Si &ge;&nbsp;2, se muestran todos los comandos que se van encontrando. Si =&nbsp;1, solamente los que no
+provocan ellos mismos un mensaje (por ejemplo, no se escribirá &laquo;echo&raquo; al log); se omiten también
+los comandos <lit>copyroot</lit>, <lit>ParseIfNotDef</lit> y <lit>ParseIfEmpty</lit> que son esencialmente
+asignaciones.
+</dd>
+
+<dt id="logassigns">logassigns</dt>
+	<dd><code>logassigns = {0, 1, 2, 3}</code>
+
+<p>Si =&nbsp;1, de momento no hace nada. Si =&nbsp;2 se muestra la asignación de variables, pero solamente
+la variable y el operador, por ejemplo <code>tb.wd =</code>. Si es =&nbsp;3 se muestran las asignación completa.
+Si es &ge;2 se muestran además los comandos <lit>copyroot</lit>.
+</dd>
+
+<dt id="logbranches">logbranches</dt>
+	<dd><code>logbranches = {0, 1, 2}</code>
+
+<p>Si &ge;&nbsp;1, se van indicando todas las bifurcaciones condicionales: <code>If</code>, <code>Else</code>,
+<code>Endif</code>, etc., indicando si la rama se toma (true) o no (false). Si es &ge;&nbsp;2, además se muestra
+para cada condicional como queda la comparación tras expandir sus miembros. (Cómo era antes de expandir ya
+se muestra con&nbsp;1.)
+</dd>
+
+<dt id="logmacros">logmacros</dt>
+	<dd><code>logmacros = {0, 1}</code>
+
+<p>Aún no está implementado.
+</dd>
+
+</dl>
+</div><!-- Comandos de log></!-->
+
+
+<h2 id="Debug">Debug</h2><div>
+
+<dl>
+<dt id="echo">echo, Echo</dt>
+	<dd><code>echo <i>mensaje</i></code><br>
+		<code>Echo <i>mensaje</i></code>
+
+<p>Escriben un mensaje al log. El comando <lit>Echo</lit> escribe literalmente el <i>mensaje</i>;
+el comando <lit>echo</lit> expande primero <i>mensaje</i> según las reglas y escribe el resultado.
+</dd>
+
+<dt id="error warning">error, warning, formatmsg</dt>
+	<dd><code>error <i>mensaje</i></code><br>
+		<code>warning <i>mensaje</i></code><br>
+		<code>formatmsg = {0, 1}</code>
+
+<p><lit>error</lit> y <lit>warning</lit> escriben un mensaje al log e incrementan la cuenta de errores / warnings.
+El <i>mensaje</i> se escribe literalmente, sin expansión. Si <lit>formatmsg</lit> es &ne;&nbsp;0 (la opción
+por defecto), se escribe <lit>Error: </lit> o <lit>Warning: </lit> delante del mensaje. Si no, el mensaje se escribe
+tal cual, como en <lit>Echo</lit>.
+</dd>
+
+<dt id="show">show</dt>
+	<dd><code>show <i>var</i></code>
+
+<p><i>var</i> se expande y el resultado ha de ser el nombre de una variable. Muestra el valor de la variable.
+</dd>
+
+<dt id="showall">showall</dt>
+	<dd><code>showall</code>
+
+<p>Muestra el valor de todas las variables definidas.
+</dd>
+
+<dt id="dump">dump</dt>
+	<dd><code>dump [filename]</code>
+
+<p>Vuelca todas las variables al fichero <code>filename</code>. Si <code>filename</code> se omite
+el programa las vuelca a <lit>stdout</lit>.
+</dd>
+
+</dl>
+</div><!-- Debug></!-->
+
+
+<h2 id="Control de flujo">Control de flujo incondicional</h2><div>
+
+<dl>
+<dt id="include">include</dt>
+	<dd><code>include <i>filename</i></code>
+
+<p>Este comando provoca que se procese el contenido del fichero <i>filename</i>, si existe. Cuando se termine
+con ese fichero se continúa con el fichero en el que se estaba.
+</dd>
+
+<dt id="jump">jump</dt>
+	<dd><code>jump <i>filename</i></code>
+
+<p>Este comando primero cierra el fichero que se está leyendo y luego salta al fichero <i>filename</i>, si existe.
+Por tanto no se procesa ninguna línea de un fichero tras un comando <lit>jump</lit>.
+</dd>
+
+<dt id="stop">stop</dt>
+	<dd><code>stop</code>
+
+<p>Se termina la lectura. Se detiene. Fin.
+</dd>
+
+<dt id="AtEnd">AtEnd</dt>
+	<dd><code>AtEnd <i>line</i></code>
+
+<p>La línea que sigue a <code>AtEnd</code> se guarda para su parseado al final, cuando se hayan cerrado todos
+los ficheros. El código enviado al final mediante este comando así como mediante <lit>BeginAtEnd</lit> /
+<lit>EndAtEnd</lit> se va acumulando en el orden de aparición.
+</dd>
+
+<dt id="BeginAtEnd">BeginAtEnd, EndAtEnd</dt>
+	<dd><code>BeginAtEnd</code><br>
+			...<br>
+			<code>EndAtEnd</code>
+
+<p>El conjunto de líneas comprendido entre <code>BeginAtEnd</code> y <code>EndAtEnd</code> se guarda
+para su parseado al final, cuando se hayan cerrado todos los ficheros. El código enviado al final mediante estos
+comandos así como mediante <lit>AtEnd</lit> se va acumulando en el orden de aparición.
+
+<p>El parseador atiende a posibles apariciones de <code>BeginAtEnd</code> y correspondientes
+<code>EndAtEnd</code> en el interior del bloque delimitado por la pareja exterior de <code>BeginAtEnd</code> /
+<code>EndAtEnd</code>, de modo que se pueden encajar unos bloques en otros.
+
+<p>Todo el código enviado al final mediante estos comandos se lee como un fichero anónimo
+que puede contener el mismo código que un fichero normal; en particular puede a su vez contener
+comandos como estos.
+
+<p>Ejemplo</p>
+<div class="exampleblock">
+	AtEnd Echo Tareas finales<br>
+	BeginAtEnd<br>
+	&emsp;x=$(a)<br>
+	&emsp;BeginAtEnd<br>
+	&emsp;&emsp;y=23<br>
+	&emsp;EndAtEnd<br>
+	EndAtEnd<br>
+	AtEnd y=10
+</div>
+<p class=continuar>dará lugar al siguiente fichero anónimo que se procesará al final:
+<div class="exampleblock">
+	Echo Tareas finales<br>
+	x=$(a)<br>
+	BeginAtEnd<br>
+	y=23<br>
+	EndAtEnd<br>
+	AtEnd y=10
+</div>
+<p class=continuar>que a su vez dará lugar al un fichero conteniendo la única línea <code>y=23</code>
+para procesarse al final. El orden total de procesado de las líneas será
+<div class="exampleblock">
+	Echo Tareas finales<br>
+	x=$(a)<br>
+	y=10<br>
+	y=23
+</div>
+
+<p>El siguiente fichero dará lugar a un bucle infinito:
+<div class="exampleblock">
+	% Fichero bucle.config<br>
+	AtEnd include bucle.config
+</div>
+</dd>
+
+</dl>
+</div><!-- Control de flujo></!-->
+
+
+<h2 id="Condicionales">Condicionales</h2><div>
+
+Las palabras clave asociadas a condicionales son: <code>If Ifdef Ifndef Ifempty Elif Else Endif</code>,
+con los significados obvios. Para <code>Ifempty</code>, v. infra.
+
+
+<h3 id="Ifdef">Ifdef, Ifndef, Ifempty</h3><div>
+
+<p> El texto que sigue tras <code>Ifdef</code>, <code>Ifndef</code> o <code>Ifempty</code> se expande.
+El resultado ha de ser el nombre de una variable
+<div class="exampleblock">
+	Ifdef tb.wd<br>
+	Ifndef $(a) &emsp; % $(a) se expande
+</div>
+<p>La condición <code>Ifempty <it>var</it></code> es <lit>true</lit> si la palabra clave que sigue no
+ha sido definida o su expansión inmediata es vacía. Es esencialmente un sinónimo de
+<div class="exampleblock">
+	If "${var}" = ""
+</div>
+</div>
+
+<h3 id="If">If, Elif</h3><div>
+
+<p>El texto que sigue en la línea a <code>If</code> o <code>Elif</code> ha de constar
+de dos partes separadas por un operador de comparación. Este operador ha de constituir una
+palabra por sí mismo; es decir, ha de estar separado por espacios de lo anterior y de lo que siga.
+Todo lo que se encuentre antes del primer operador de comparación que aparezca en la línea
+es el <i>primer operando</i>, y todo lo que se encuentre después hasta el final de la línea
+(o comentario) es el <i>segundo operando</i>.
+<p>El operador puede ser cualquiera de los siguentes:
+<p><code>= &ne; < &le; > &ge; != <= >=</code>
+<p class="continuar">Los tres últimos son dígrafos para las correspondientes formas
+simples.
+
+<p>El parseador en primer lugar expandirá cada uno de los operandos. Después intentará
+parsearlos como <lit>bool</lit>, <lit>entero</lit>, <lit>medida</lit> o <lit>float</lit>.
+Si no lo consigue, o si los dos miembros no son del mismo tipo, se compararán como strings.
+Si ambos miembros tienen el mismo tipo, se llevará a cabo la correspondiente comparación
+numérica.
+
+<p>Si el primer operando tiene exactamente la forma
+<p><code>$<<i>var</i>></code>
+<p class="continuar">entonces la variable <i>var&thinsp;</i> tiene que existir y el segundo
+operando ha de ser del mismo tipo que <i>var&thinsp;</i>, una vez parseado. Si <i>var&thinsp;</i>
+ya está <a href="#Variable completamente expandida">completamente expandida</a> y aún no
+ha sido tipada (por ejemplo en otro condicional, o mediante <code>type <i>var</i></code>),
+se parseará ahora para tiparla. Si no está completamente expandida se toma su texto de reemplazo
+como la expansión de <code>$<<i>var</i>></code> sin hacer nada más; esto es, igual que si
+se hubiese escrito <code>${<i>var</i>}</code>, y al resultado se considera de tipo string.
+V. <a href="#Tipos de valores">Tipos de valores</a> y <a href="#Expansión ang"><lit>$<<i>var</i>></lit></a>.
+
+<p>Si el primer operando tiene exactamente la forma <code>$<<i>var</i>></code>, tras
+haberlo procesado y proceder a parsear el segundo operando, si este tiene también esa
+forma se procesará exactamente igual que el primer operando. En cualquier otro caso,
+se expande normalmente y se parsea.
+
+<p>Por ejemplo:
+<div class="exampleblock">
+	tb.wd=60cm<br>
+	If $(tb.wd) < 100cm<br>
+	If $(tb.wd) < 40<br>
+	If "$&lang;tb.wd&rang; < "40<br>
+	If $&lang;tb.wd&rang; < 40<br>
+</div>
+<p class="continuar">El primer condicional compara las medidas 60&nbsp;cm y 100&nbsp;cm;
+el segundo compara las cadenas de texto <lit>"60cm"</lit> y <lit>"40"</lit> (ya que <code>40</code> no es una
+medida); el tercero compara las cadenas de texto <lit>""6000 dmm"</lit> y <lit>""40"</lit>; el último
+da error, ya que <code>40</code> no es una medida, como requiere la sintaxis del primer operando,
+siendo ese el tipo de <lit>tb.wd</lit>.
+
+</div><!-- If></!-->
+</div><!-- Condicionales></!-->
+
+
+<h2 id="Manejo de variables">Manejo de variables</h2><div>
+
+<dl>
+<dt id="remove">remove</dt>
+	<dd><code>remove <i>var</i></code>
+
+<p><i>var</i> se expande y el resultado ha de ser el nombre de una variable. Esta se elimina
+del conjunto de variables definidas.
+</dd>
+
+<dt id="type">type</dt>
+	<dd><code>type <i>var</i> {string, bool, entero, medida, float}</code>
+
+<p><i>var</i> se expande y el resultado ha de ser el nombre de una variable. Intenta parsear
+el texto de reemplazo de la variable como un dato del tipo indicado:
+
+<p class="noindent">&bull;&ensp;<lit>string</lit>:&ensp;Todos los caracteres especiales pierden su valor, quedando
+un string puro y por ello la variable completamente expandida. Por ejemplo:
+<div class="exampleblock">
+	a=6 <br>
+	b:=x$(a)x<br>
+	c:=x$(a)x<br>
+	type b string<br>
+	d=$(c) &emsp; % d = x6x<br>
+	d=$(b) &emsp; % d = x$(a)x
+</div>
+
+<p class="noindent">&bull;&ensp;Para cualquier otro tipo que no sea <lit>string</lit>, la variable <i>var</i>
+ha de estar ya completamente expandida. Si no es así, se ignora el comando y se considera un error.
+La forma que ha de tener el texto a tipar según se vaya a tipar a uno u otro tipo se detalla en
+<a href="#Tipos de valores">Tipos de valores</a>.
+
+<p>Si el tipado tiene éxito, el resultado es lo que se expandirá en el modo <code>$<<i>var</i>></code>. Por ejemplo:
+<div class="exampleblock">
+	a= Sí<br>
+	b=!$(a)<br>
+	type b bool<br>
+	c= $(b) || $&lang;b&rang; &emsp; % c= !Sí || No<br>
+	<br>
+	a=3<br>
+	b:=2$(a)0<br>
+	type b entero &emsp; % Error, se ha intentado parsear literalmente 2$(a)0 como un entero
+</div>
+
+<p>No es necesario haber tipado previamente una variable para poder expandirla como <code>$<<i>var</i>></code>
+(v. <a href="#Expansión ang"><lit>$<<i>var</i>></lit></a>).
+</dd>
+
+<dt id="cleanspaces">cleanspaces</dt>
+	<dd><code>cleanspaces <i>var</i></code>
+
+<p><i>var</i> se expande y el resultado ha de ser el nombre de una variable. Elimina espacios iniciales
+y finales del texto de reemplazo de la variable y deja sus distintas palabras separadas por un único espacio.
+<p><lit>" a 23&nbsp;&nbsp;cN&nbsp;&nbsp;&nbsp;"</lit>&ensp;&rarr;&ensp;<lit>"a 23 cN"</lit>
+</dd>
+
+<dt id="copyroot">copyroot</dt>
+	<dd><code>copyroot <i>root2 root1</i></code>
+
+<p><i>root2</i> y <i> root1</i> se expanden, debiendo el resultado consistir en una única palabra. Copia
+todas las claves de la forma <lit><i>root1</i><i>resto </i></lit>a claves <lit><i>root2</i><i>resto</i></lit>.
+Por ejemplo:
+<div class="exampleblock">
+	a.key1= Sí<br>
+	a.kj=20 mm<br>
+	a.texto= Título<br>
+	copyroot bb. a.
+</div>
+<p class="continuar">creará las claves <lit>bb.key1</lit>, <lit>bb.kj</lit>, <lit>bb.texto</lit> (o las
+reemplazará si ya existen) con los mismos valores que tienen <lit>a.key1</lit>, etc.
+</dd>
+
+</dl>
+</div><!-- Manejo de variables></!-->
+
+
+<h2 id="Otros comandos">Otros comandos</h2><div>
+
+<dl>
+<dt id="FILE">FILE</dt>
+	<dd><code>FILE <i>filename</i></code>
+
+<p>La línea <code><i>filename</i></code> se expande. Indica al parseador que el fichero que se está
+leyendo tiene por nombre a partir de este punto el resultado de la expansión de <i>filename</i>. Esto
+afecta toda la información de log o debug asociada a lo que a partir de ese punto se lea de ese fichero,
+como mensajes de error de parseado, el fichero en que fue leída tal calve, etc.
+</dd>
+
+<dt id="LINE">LINE</dt>
+	<dd><code>LINE <i>n</i></code>
+
+<p>El texto <code><i>n</i></code> se expande. El resultado ha de ser un número (puede ir seguido de
+más texto, que se ignora). Indica al parseador que esa misma línea; es decir, la línea
+
+<p class="continuar"><code>LINE <i>n</i></code>
+
+<p class="continuar"> es la línea número <i>n</i> del fichero. La línea siguiente será pues la <i>n</i>+1.
+Los números de línea empiezan a contarse en&nbsp;1: la primera línea de un fichero es la línea número&nbsp;1.
+Si se quiere que el parseador piense que se va a parsear el fichero <lit>fich1.config</lit> desde el principio
+habrá de escribirse
+<div class="exampleblock">
+FILE fich.config<br>
+LINE 0
+</div>
+</dd>
+
+<dt id="ParseIf">ParseIfNotDef, ParseIfEmpty</dt>
+	<dd><code>ParseIfNotDef <i>var op</i> [...]</code><br>
+	<code>ParseIfEmpty <i>var op</i> [...]</code>
+
+<p>Asigna la variable <i>var</i> solamente si no está todavía definida (<lit>ParseIfNotDef</lit>) o bien
+si no está definida o su expansión inmediata es una cadena vacía (<lit>ParseIfNotEmpty</lit>). Por ejemplo:
+<div class="exampleblock">
+	a=6 <br>
+	ParseIfNotDef d= xxx &emsp; % d = xxx, porque d no estaba definida<br>
+	ParseIfNotDef a= xxx &emsp; % a = 6, porque ya estaba definida<br>
+	a=<br>
+	ParseIfNotEmpty a= xxx &emsp; % a = xxx, porque su expansión era vacía<br>
+</div>
+</dd>
+
+<dt id="Override">ModoOverride</dt>
+	<dd><code>ModoOverride [=] {0,1}</code>
+
+<p>El signo <code>=</code> es opcional. Indica cómo actuar cuando en el fichero aparece una asignación
+a una variable que ya extiste. El comportamiento por defecto es redefinir la variable, y es el que corresponde
+a <lit>ModoOverride</lit>&nbsp;=0. Si este parámetro se establece a&nbsp;1 la asignación se ignora:
+<div class="exampleblock">
+	% El programa empieza en ModoOverride 0<br>
+	a=1 <br>
+	a=2 &emsp; % Ahora a es 2.<br>
+	ModoOverride 1<br>
+	a=3 &emsp; % a sigue siendo 2<br>
+</div>
+
+Esto no afecta a cualquier otra manera de redefinir la variable: <code>remove</code>,
+<code>cleanspaces</code>, <code>ParseIfEmpty</code> o una alteración mediante
+<code>copyroot</code>.
+
+</dl>
+</div><!-- Otros comandos><!-->
+
+</div><!-- content></!-->
+</body>
+</html>

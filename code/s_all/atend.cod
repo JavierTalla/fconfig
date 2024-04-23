@@ -1,0 +1,67 @@
+ifKW(KW_AtEnd){
+	LOGcomname(commands,LCOMMANDS);
+	if(globals->state.atend_nfile!=globals->state.nfile){
+		ifnzunlike(insert_file_atend(globals)) goto salida_outofmem;
+	}
+	ifnzunlike(insert_line_atend(globals,buffer.lc-1,expanded)) goto salida_outofmem;
+	Advanceinline(buffer);
+	char8_t *s=buffer.pc;
+	while(*buffer.pc!='\n') buffer.pc++;
+	uint n=(pdif)(buffer.pc-s)+1; //Copiar el '\n' del final
+	Gadd_n(globals->atend,char8_t,s,n,goto salida_outofmem);
+	goto continuar;
+}
+
+ifKW(KW_BeginAtEnd){
+	LOGcomname(commands,LCOMMANDS);
+	if_Moreinl(buffer){
+		Warning_s(&globals->errors,buffer.lc,"Hay texto tras un comando BeginAtEnd. Se ignora");
+		globals->errors.war_count++;
+	}
+	u8int nc=1;
+	//Las líneas en blanco iniciales se mantienen, pero podrían no.
+	//Las intermedias, a partir de la primera que no esté en blanco, se han de mantener
+	//Las últimas no se mantienen, pero podrían sí.
+	if(globals->state.atend_nfile!=globals->state.nfile){
+		ifnzunlike(insert_file_atend(globals)) goto salida_outofmem;
+	}
+	uint lc=buffer.lc;
+	ifnzunlike(insert_line_atend(globals,lc,expanded)) goto salida_outofmem;
+	finishline(buffer);
+	const char8_t *s=buffer.pc,
+					*end=buffer.pc;
+
+	while(*buffer.pc!='\0'){
+		Advance(buffer);
+		ifz(strcmp8_b(buffer.pc,u8"BeginAtEnd")) nc++;
+		elifz(strcmp8_b(buffer.pc,u8"EndAtEnd")){ nc--;
+			ifz(nc){
+				LOG(commands,LCOMMANDS,snl,"EndAtEnd");
+				buffer.pc+=strlen8(u8"EndAtEnd"); Advanceinline(buffer);
+				if_Moreinl(buffer){
+					Warning_s(&globals->errors,buffer.lc,"Hay texto tras un comando EndAtEnd. Se ignora");
+					globals->errors.war_count++;
+				}
+				break;
+		}	}
+		finishline(buffer);
+		end=buffer.pc; //El principio de la siguiente línea
+	}
+
+	if(*buffer.pc=='\0'){
+		Error_s(&globals->errors,lc,u8"Falta el EndAtEnd correspondiente a este BeginAtEnd. Se llegó hasta el final "
+						"del fichero. Todo el código desde desde este BeginAtEnd hasta el final se ha añadido para ejecutar "
+						"\"At End\".");
+		globals->errors.err_count++;
+	}
+	if(end==s) goto continuar;
+	uint n=(pdif)(end-s); //El último carácter copiado será un '\n'
+	Gadd_n(globals->atend,char8_t,s,n,goto salida_outofmem);
+	goto continuar;
+}
+
+ifKW(KW_EndAtEnd){
+	Error_s(&globals->errors,buffer.lc,u8"EndAtEnd que no se corresponde con ningún BeginAtEnd. Ignorado");
+	globals->errors.err_count++;
+	goto continuar;
+}

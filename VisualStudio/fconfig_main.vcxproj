@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+<PropertyGroup Label="Globals">
+    <CodePath>..\code</CodePath>
+    <ProjectGuid>{81F83F77-8468-451B-97E2-8EE0A909C3E5}</ProjectGuid>
+    <ConfigurationType>Application</ConfigurationType>
+</PropertyGroup>
+<Import Project="CommonC.props" />
+<ItemGroup>
+    <ClCompile Include="$(CodePath)\main\main.c" />
+    <ClInclude Include="$(CodePath)\main\main_utils.c" />
+</ItemGroup>
+</Project>

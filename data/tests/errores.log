@@ -1,0 +1,111 @@
+Programa 'ficheroconfig', parseador de ficheros fconfig, Feb 27 2023
+
+Invocación del programa:
+
+fconfig.exe ..\..\tests\errores.config
+
+> Buscando el archivo de configuración ..\..\tests\errores.config
+(Archivo ..\..\tests\errores.config
+	(6) Error: Expansión recursiva de la variable c
+	            Al expandir el texto: $(c)
+	            Al expandir el texto: $(b)
+	            Al expandir el texto: $(a)
+	            Al expandir la asignación: c = $(c)
+	(11) Error: Expansión recursiva de la variable f
+	            Al expandir el texto: k$(f)k
+	            Al expandir el texto: M$(f)M
+	            Al expandir la asignación: y = $(m) N
+a [none] = $(b)
+b [none] = $(c)
+c [none] = $(c)
+z [none] = $(m) N
+f [none] = k$(f)k
+m [none] = M$(f)M
+y [none] = Mk$(f)kM N
+	(19) Error: No se encontró el paréntesis de cierre correspondiente al '(' de apertura: (b
+	            Al expandir la asignación: a = $(b   %Error overrun 
+	(21) Error: No se encontró el paréntesis de cierre correspondiente al '(' de apertura: (c
+	            Al expandir el texto: Un texto $(c
+	            Al expandir la asignación: x = $(a)   %Error overrun 2
+	(25) Error: El contenido de un [ ] que indica el número de palabra ha de ser un número entero
+	            Se encontró: 23g
+	            Al expandir la asignación: a = $[ texto ][ 23g]
+	(27) Error: El contenido de un [ ] que indica el número de palabra ha de ser un número entero
+	            Se encontró: 23g
+	            Al expandir el texto: $[ texto ][ 23g]
+	            Al expandir la asignación: b = $(a)
+	(28) Error: El contenido de un [ ] que indica el número de palabra ha de ser un número entero
+	            Se encontró: 23 g
+	            Al expandir la asignación: a = $[ texto ][ 23 g]
+	(30) Error: El contenido de un [ ] que indica el número de palabra ha de ser un número entero
+	            Se encontró: 63k
+	            Al expandir el texto: $[ texto ][ 6$(num)3k]
+	            Al expandir la asignación: b = $(a)
+	(31) Error: No se encontró el paréntesis de cierre correspondiente al '[' de apertura: [
+	            Al expandir el texto: $[
+	            Al expandir la asignación: b = $[${a}][1]
+	b [none] = ][
+	(34) Error: El contenido de un [ ] que indica el número de palabra ha de ser un número entero
+	            Se encontró: 63k
+	            Al expandir el texto: $[ texto ][ 6$(num)3k]
+	            Al expandir la cadena [ $(a)]
+	            Al expandir la asignación: a = $[ $(a)][2]
+	(36) Error: El número de palabra indicado dentro de [ ] es demasiado grande: 123456
+	            Al expandir el texto: $[ texto ][ 123456]
+	            Al expandir la asignación: b = $(a)
+	(37) Error: El contenido de un [ ] que indica el número de palabra ha de ser un número entero
+	            Se encontró: kk
+	            Al expandir la asignación: a = $[ texto ][$<x>]
+	(39) Error: El contenido de un [ ] que indica el número de palabra ha de ser un número entero
+	            Se encontró: kk
+	            Al expandir el texto: $[ texto ][$<x>]
+	            Al expandir la asignación: b = $(a)
+	(40) Error: No se encontró el paréntesis de cierre correspondiente al '[' de apertura: [ asd
+	            Al expandir la asignación: a = $[ texto ][ asd
+	(41) Error: En un {[...]} el '}' de cierre tiene que venir inmediatamente a continuación del ']': {[asd] }...
+	            Al expandir la asignación: a = $[ texto ] {[asd] } sf $[]{[0]}
+	(43) Error: En un {[...]} el '}' de cierre tiene que venir inmediatamente a continuación del ']': {[asd] }
+	            Al expandir el texto: $[ texto ] {[asd] }
+	            Al expandir la asignación: b = $(a)
+	(44) Error: Tras el ']' de cierre falta el '}': {[asd]
+	            Al expandir la asignación: a = $[ texto ] {[asd]
+	(46) Error: Tras el ']' de cierre falta el '}': {[asd]
+	            Al expandir el texto: $[ texto ] {[asd]
+	            Al expandir la asignación: b = $(a)
+	(47) Error: Tras el ']' de cierre falta el '}': {[asd] b
+	            Al expandir la asignación: a = $[ texto ] {[asd] b
+	(48) Error: Tras el ']' de cierre falta el '}': {[asd] b...
+	            Al expandir la asignación: a = $[ texto ] {[asd] bbbb af af adf adf 
+	(49) Error: No se encontró el paréntesis de cierre correspondiente al '[' de apertura: [ asdva [] {}
+	            Al expandir la asignación: a = $[ asdva [] {}
+	(51) Error: No se encontró el paréntesis de cierre correspondiente al '[' de apertura: [ asdva [] {}
+	            Al expandir el texto: $[ asdva [] {}
+	            Al expandir la asignación: b = $(a)
+	(52) Error: Un $[ ... ] ha de ir seguido de [...] o {[...]}. Se encontró: s
+	(52) Error: Un $[ ... ] ha de ir seguido de [...] o {[...]}. Se encontró: p
+	            Al expandir la asignación: a = $[texto] s $[texto] p
+	(53) Error: Tras el $[ ... ] falta el [...] o {[...]} que ha de seguir
+	            Al expandir la asignación: a = $[texto] 
+	(55) Error: Tras el $[ ... ] falta el [...] o {[...]} que ha de seguir
+	            Al expandir el texto: $[texto]
+	            Al expandir la asignación: b = $(a)
+	(57) Error: Tras el $[ ... ] falta el [...] o {[...]} que ha de seguir
+	            Al expandir el texto: $[texto] {
+	            Al expandir la asignación: b = $(a)
+	(58) Error: El contenido de un [ ] que tiene que indicar el número de palabra está vacío
+	            Al expandir la asignación: a = $[texto][]
+	(61) Error: No se encontró el paréntesis de cierre correspondiente al '[' de apertura: [texto[$(c)]
+	            Al expandir el texto: $[texto[$(c)]
+	            Al expandir la asignación: b = $(a)
+	(62) Error: No se encontró el paréntesis de cierre correspondiente al '[' de apertura: [
+	            Al expandir la asignación: a = $[
+fin del archivo ..\..\tests\errores.config)
+
+Error: Expansión recursiva de la variable f
+            Al expandir el texto: k$(f)k
+            Al expandir el texto: M$(f)M
+            Al expandir el texto: $(m) N
+        Al expandir la variable: z = $(m) N
+Error: Expansión recursiva de la variable f
+            Al expandir el texto: k$(f)k
+        Al expandir la variable: f = k$(f)k

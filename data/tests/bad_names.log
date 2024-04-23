@@ -1,0 +1,17 @@
+Programa 'ficheroconfig', parseador de ficheros fconfig, Dec 18 2023
+
+Invocación del programa:
+
+fconfigd.exe ..\..\tests\bad_names.config
+
+> Buscando el archivo de configuración ..\..\tests\bad_names.config
+(Archivo ..\..\tests\bad_names.config
+	(1) Error: Nombre inválido para una variable o macro: a[]
+	(5) Error: Nombre inválido para una variable o macro: replace
+	(7) Error: Nombre inválido para una variable o macro: replace
+	(9) Error: Falta el ) de cierre en la definición de la macro asd
+	(10) Warning: Caracteres ignorados tras el ) de cierre en la definición de la macro extra
+	(12) Error: Runaway argument. En la asignación de aas)) (que se ignora) se ha llegado al final del fichero; falta el '}' de cierre
+	(12) Error: Nombre inválido para una variable o macro: aas))
+fin del archivo ..\..\tests\bad_names.config)
+

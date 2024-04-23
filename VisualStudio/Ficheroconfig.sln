@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32519.379
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lee_ficheroconfig", "lee_ficheroconfig.vcxproj", "{5609428C-31BA-4A19-A177-15D0B0B15690}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fconfig_main", "fconfig_main.vcxproj", "{81F83F77-8468-451B-97E2-8EE0A909C3E5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5609428C-31BA-4A19-A177-15D0B0B15690}.Debug|x64.ActiveCfg = Debug|x64
+		{5609428C-31BA-4A19-A177-15D0B0B15690}.Debug|x64.Build.0 = Debug|x64
+		{5609428C-31BA-4A19-A177-15D0B0B15690}.Debug|x86.ActiveCfg = Debug|x64
+		{5609428C-31BA-4A19-A177-15D0B0B15690}.Debug|x86.Build.0 = Debug|x64
+		{5609428C-31BA-4A19-A177-15D0B0B15690}.Release|x64.ActiveCfg = Release|x64
+		{5609428C-31BA-4A19-A177-15D0B0B15690}.Release|x64.Build.0 = Release|x64
+		{5609428C-31BA-4A19-A177-15D0B0B15690}.Release|x86.ActiveCfg = Release|x64
+		{5609428C-31BA-4A19-A177-15D0B0B15690}.Release|x86.Build.0 = Release|x64
+		{81F83F77-8468-451B-97E2-8EE0A909C3E5}.Debug|x64.ActiveCfg = Debug|x64
+		{81F83F77-8468-451B-97E2-8EE0A909C3E5}.Debug|x64.Build.0 = Debug|x64
+		{81F83F77-8468-451B-97E2-8EE0A909C3E5}.Debug|x86.ActiveCfg = Debug|x64
+		{81F83F77-8468-451B-97E2-8EE0A909C3E5}.Debug|x86.Build.0 = Debug|x64
+		{81F83F77-8468-451B-97E2-8EE0A909C3E5}.Release|x64.ActiveCfg = Release|x64
+		{81F83F77-8468-451B-97E2-8EE0A909C3E5}.Release|x64.Build.0 = Release|x64
+		{81F83F77-8468-451B-97E2-8EE0A909C3E5}.Release|x86.ActiveCfg = Release|x64
+		{81F83F77-8468-451B-97E2-8EE0A909C3E5}.Release|x86.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9A413D6D-B31D-43D5-B9E9-166189CCD74F}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+EndGlobal

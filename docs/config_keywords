@@ -1,0 +1,13 @@
+line-comment	= %
+statements = 
+ 	include jump stop
+ 	Echo echo warning error formatmsg
+ 	logging logonline loggingall loggingnone loggingdefault
+ 	logfiles logerrors logcommands logassigns logbranches logvars logmacros
+ 	Begindef Enddef If Else Elif Endif Ifdef Ifndef
+ 	ModoOverride ParseIfNotDef ParseIfEmpty remove copyroot type
+ 	show showall dump
+ 	AtEnd BeginAtEnd EndAtEnd
+ 	LINE FILE
+ operators = $()[]=<>≠≤≥
+ 

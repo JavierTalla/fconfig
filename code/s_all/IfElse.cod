@@ -1,0 +1,184 @@
+/* Tratamiento de If ... Else ... */
+
+//Endif
+ifKW(KW_Endif){
+	iflike(lstate.ifS.m!=0){ //If m==0 -> lev=0 y el mensaje de error ya se ha mostrado arriba
+		if(lstate.ifS.m==lstate.ifS.lev){
+			lstate.ifS.lev--, lstate.ifS.state=IFState_True;
+			LOGcomname(branches,1);
+		}
+		lstate.ifS.m--;
+	}
+	goto continuar;
+}
+
+if(lstate.ifS.m>lstate.ifS.lev){ //skipping code
+	if(Iftype[kwass.kw]==IFTYPE_IF) lstate.ifS.m++;
+	goto continuar;
+}
+
+//Henceforth m=lev
+
+//Else
+ifKW(KW_Else){
+	LOGcomname(branches,1);
+	if(lstate.ifS.m!=0){ //If m==0 -> lev=0 y el mensaje de error ya se ha mostrado arriba
+		const char *s=NULL;
+		if(lstate.ifS.state==IFState_True){s="  Se empieza a saltar código\n"; lstate.ifS.state=IFState_Ready;}
+		elif(lstate.ifS.state==IFState_Waiting){s="  Evaluates to true\n"; lstate.ifS.state=IFState_True;}
+		if(s!=NULL){LOG(branches,1,s,s);}
+	}
+	goto continuar;
+}
+
+//Si estamos saltándonos las líneas, o vamos a empezar a saltarlas, continuar.
+if(lstate.ifS.state==IFState_Ready
+	|| (lstate.ifS.state==IFState_Waiting && Iftype[kwass.kw]!=IFTYPE_ELSE)
+	|| (lstate.ifS.state==IFState_True && Iftype[kwass.kw]==IFTYPE_ELSE) /*Elif, porque Else ya se trató arriba*/
+){
+	//Si encontramos un Elif en el nivel 0 (en este nivel el estado siempre es IFState_True) lo ignoramos.
+	//En ese caso el mensaje de error ya se ha mostrado arriba
+	if(lstate.ifS.state==IFState_True && lstate.ifS.m!=0){ //Empezamos a skip código
+		LOGcomname(branches,1); LOG(branches,1,s,"  Se empieza a saltar código\n");
+		lstate.ifS.state=IFState_Ready;
+	}
+	elif(Iftype[kwass.kw]==IFTYPE_IF) lstate.ifS.m++;
+	goto continuar;
+}
+
+if(bwrong){
+	lstate.ifS.state=IFState_Waiting; //Las condiciones mal formadas se interpretan como falsas
+	if(Iftype[kwass.kw]==IFTYPE_IF) lstate.ifS.m=++lstate.ifS.lev;
+	goto continuar;
+}
+
+//Elif. state=Waiting
+if(Iftype[kwass.kw]==IFTYPE_ELSE){ //No puede ser Else porque ya se trató más arriba
+	//Es un Elif. Simular un If
+	kwass.kw=KW_If;
+	lstate.ifS.state=IFState_True;
+	lstate.ifS.m=--lstate.ifS.lev;
+}
+
+//Henceforth state=True
+
+//If
+if(Iftype[kwass.kw]==IFTYPE_IF){
+	bint btrue=0;
+	char8_t *op1, *op2;
+	Tok_Relation op;
+
+	LOG_cmd_line(branches,1);
+
+	lstate.ifS.m=++lstate.ifS.lev;
+	ifKW(KW_If){
+		int nret;
+		bint blóg1, blóg2; //Si se trata de un if "lógico"
+		ObjectValue val1, val2;
+		ssint srel; // <0: menor. 0: igual. >0: mayor
+
+		prepare_rel_line(&buffer,&op1,&op,&op2);
+		ifunlike(op2==NULL) goto bad_ifsyntax;
+
+		blóg1=1;
+		nret=parse_if_member(op1,&blóg1,&val1,expanded,&globals->kvs,&globals->errors,GET_LINE,&globals->log);
+		ifunlike(nret){
+			ifunlike(nret==AT_NOMEM) goto salida_outofmem;
+			const char *s;
+			if(nret==PARSEIF_VarUndefined) s=u8"El primer miembro del %s especifica una variable no definida: %Sn", op1++;
+			else s=u8"El primer miembro del %s no se pudo parsear correctamente: %Sn";
+			ERROR_f(&globals->errors,s,PTR,op1);
+			goto continuar;
+		}
+
+		blóg2=blóg1;
+		nret=parse_if_member(op2,&blóg2,&val2,expanded2,&globals->kvs,&globals->errors,GET_LINE,&globals->log);
+		ifunlike(nret){
+			ifunlike(nret==AT_NOMEM) goto salida_outofmem;
+			const char *s;
+			if(nret==PARSEIF_VarUndefined) s=u8"El segundo miembro del %s especifica una variable no definida: %Sn", op2++;
+			else /*PARSEIF_Syntax*/ s=u8"El segundo miembro del %s no se pudo parsear correctamente: %Sn";
+			ERROR_f(&globals->errors,s,PTR,op2);
+			goto continuar;
+		}
+
+	#ifdef _DEBUG
+		LOG(branches,2,f,u8"  After expansion: %s %s %s\n",expanded,TokenRelationStr[op],expanded2);
+	#else
+		if(isLevel(branches,2)){
+			if(globals->errors.blog!=NULL){
+				towrite_string(globals->errors.blog,u8"  After expansion: ");
+				do_write_objstr0(globals->errors.blog,expanded);
+				toput_char(globals->errors.blog,' ');
+				towrite_stringl(globals->errors.blog,TokenRelationStr[op],' ');
+				do_write_objstr0(globals->errors.blog,expanded2);
+				toput_char(globals->errors.blog,'\n');
+			}
+			if(globals->errors.on){
+				fputs(u8"  After expansion: ",stderr);
+				do_write_objstr0_stderr(expanded);
+				putc(' ',stderr);
+				fputs(TokenRelationStr[op],stderr); putc(' ',stderr);
+				do_write_objstr0_stderr(expanded2);
+				putc('\n',stderr);
+			}
+		}
+	#endif
+
+		if(blóg1 && val1.type!=val2.type){
+			ERROR(&globals->errors,u8"Se ha pedido una comparación de valores (no de textos) y el tipo del segundo"
+											u8" operando no se corresponde con el del primer operando: %s %Sn %s %Sn",PTR,op1,TokenRelationStr[op],op2);
+			ChkErrLiteral(&globals->errors,u8"         El primer operando es de tipo %s; el segundo es un %s.\n",TypesStrings[val1.type],TypesStrings[val2.type]);
+			globals->errors.err_count++;
+			goto continuar;
+		}
+
+		if(val1.type!=val2.type || val1.type==VAL_TYPE_string){
+			if(!(op==REL_Eq || op==REL_Neq)){
+				ERROR_s(&globals->errors,u8"Se ha pedido una comparación de textos y el operador no es = ni != ni ≠");
+				globals->errors.err_count++;
+				goto continuar;
+			}
+			srel=cmp_kvstrings(expanded,expanded2);
+		}elif(val1.type==VAL_TYPE_bool){
+			if(op!=REL_Eq && op!=REL_Neq) goto bad_ifsyntax;
+			srel=val1.val!=val2.val;
+		}elif(val1.type==VAL_TYPE_sMedida){
+			srel=val1.sval-val2.sval;
+		}elif(val1.type==VAL_TYPE_uint){
+			srel=val1.val-val2.val;
+		}else{
+			srel=(val1.fl>val2.fl)-(val1.fl<val2.fl);
+		}
+		if(srel<0) srel=-1;
+		elif(srel>0) srel=1;
+
+		btrue=isRelationSatisfied(op,srel);
+	}elif(isKW(KW_Ifdef) || isKW(KW_Ifndef)|| isKW(KW_Ifempty)){
+		expand_buf_keyword_noempty(&buffer,expanded,&globals->kvs,&globals->errors,&globals->log,PTR);
+		ifunlike(globals->errors.err==VAR_INVALID_NAME) btrue=0;
+		else{
+			const KeyVal pv=find_key_0(&globals->kvs,expanded);
+			if(isKW(KW_Ifempty) && pv.p.obj!=NULL && pv.p.obj->c.strsize==0) btrue=1;
+			else btrue=(pv.p.obj==NULL) ^ isKW(KW_Ifdef);
+		}
+	}
+
+	if(isLevel(branches,1)){
+		const char *s;
+		if(btrue) s="  Evaluates to true\n";
+		else s="  Evaluates to false\n";
+		LOG(branches,1,s,s);
+	}
+	if(!btrue) lstate.ifS.state=IFState_Waiting;
+	goto continuar;
+
+bad_ifsyntax:
+	finishline(buffer);
+	{buffer.savedchar=*buffer.pc; *buffer.pc='\0';
+	ERROR(&globals->errors,u8"Sintaxis de condicional incorrecta: %s %Sn %s",KeyWords[kwass.kw].name,op1,TokenRelationStr[op]);
+	*buffer.pc=buffer.savedchar;}
+	globals->errors.err_count++;
+	lstate.ifS.state=IFState_Waiting;
+	goto continuar;
+}

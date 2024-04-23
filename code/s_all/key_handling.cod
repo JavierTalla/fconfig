@@ -1,0 +1,202 @@
+ifKW(KW_remove){
+	expand_buf_keyword_noempty(&buffer,expanded,&globals->kvs,&globals->errors,&globals->log,PTR);
+	ifunlike(globals->errors.err==VAR_INVALID_NAME) goto continuar;
+	LOG(commands,LCOMMANDS,ssnl,"remove ",expanded);
+	hBase8WhereKey *ph=geth_hBase8WhereKey(&globals->kvs.hash,expanded);
+	if(ph!=NULL){
+		if(ph->data.macro_type==MACRO_SPECIAL){
+			WARNING(&globals->errors,u8"La clave %s no se puede eliminar porque es una de las claves predefinidas",PTR);
+			goto warning_y_continuar;
+		}
+		if(ph->data.macro_type==MACRO_OBJECT){
+			MacObj *kv=globals->kvs.objs.ppio+ph->data.n;
+			MacObj_defaults(*kv);
+		}
+		if(ph->data.macro_type==MACRO_FUNC){
+			MacFun *kv=globals->kvs.funcs.ppio+ph->data.n;
+			MacFun_defaults(*kv);
+		}
+		removeh_hBase8WhereKey(&globals->kvs.hash,ph);
+	}
+	goto continuar;
+}
+
+//La nueva calve apunta al mismo espacio de memoria que la antigua. En el futuro, si una clave modificada no se realoja, habrá
+//que cambiar esto. De momento cleanspaces ya es así, pero nunca se usa.
+ifKW(KW_copyroot){
+	if(isLevel(assigns,LASSIGNS_REGULARS_KEY)){LOG(assigns,LASSIGNS_REGULARS_KEY,f,"%s %Sn\n",PTR,buffer.pc);}
+	else{LOGcomname(commands,LCOMMANDSALL);}
+	bint b; //Si se ha encontrado alguna clave con la raíz j.
+	struct{
+		char8_t *ptr; //Espacio para guardar los nombres de las claves que vamos creando
+		u16int n; //Tamaño de la memoria reservada
+	} nombre;
+
+	{char8_t *pclave=buffer.pc;
+	expand_buf_keyword_noempty(&buffer,expanded,&globals->kvs,&globals->errors,&globals->log,PTR);
+	ifunlike(globals->errors.err==VAR_INVALID_NAME) goto continuar;
+	Advanceinline(buffer);
+	ifunlike_Nomore(buffer){
+		ERROR(&globals->errors,u8"Falta la segunda raíz en la instrucción copyroot: %s %Sb",PTR,pclave);
+		goto error_y_continuar;
+	}}
+
+	{char8_t *pclave=buffer.pc;
+	expand_buf_keyword(&buffer,expanded2,&globals->kvs,&globals->errors,&globals->log,PTR);
+	ifunlike(globals->errors.err==VAR_INVALID_NAME) goto continuar;
+	ifunlike(*expanded2=='\0'){
+		WARNING(&globals->errors,u8"La expansión de la segunda raíz de un comando copyroot es vacía. No se copia nada. Antes de expandir: %Sb",pclave);
+		goto warning_y_continuar;
+	}}
+
+	Advanceinline(buffer);
+	ifunlike(MORE_INL(buffer)){
+		WARNING(&globals->errors,u8"Palabras extra en la orden '%s' ignoradas: %Sn",PTR,buffer.pc);
+		globals->errors.war_count++;
+	}
+	ifzunlike(strcmp8(expanded,expanded2)){
+		WARNING(&globals->errors,u8"Ignorada la instrucción \"%s %s\" porque las dos raíces indicadas son la misma",PTR,expanded);
+		goto warning_y_continuar;
+	}
+
+	b=0;
+	ifunlike((nombre.ptr=(char8_t*)malloc(0))==NULL) goto salida_outofmem;
+	nombre.n=0;
+	//Objetos
+	{durchVectorp(MacObj,globals->kvs.objs){
+		const char8_t *pkeyj=KeyKeyg(p);
+		{const char8_t *pj=expanded2;
+		while(*pj!='\0' && *pkeyj==*pj) pj++, pkeyj++;
+		if(*pj!='\0') continue;}
+		b=1;
+
+		u16int len=strlen8(expanded)+strlen8(pkeyj)+1;
+		if(nombre.n<len){
+			len+=20; len&=~3U;
+			nombre.ptr=realloc(nombre.ptr,len*usizeof(char8_t));
+			ifunlike(nombre.ptr==NULL) goto salida_outofmem;
+			nombre.n=len;
+		}
+		{char8_t *pj=strpcpy8(nombre.ptr,expanded); strcpy8(pj,pkeyj);}
+
+		MacObj *kvi=findcreate_obj_0(&globals->kvs,nombre.ptr);
+		//El entero str queda igual en las dos claves: <rootj><pkeyj> y <rooti><pkeyj> apuntarán a la misma cadena en memoria
+		uint _key=kvi->c.key;
+		*kvi=*p;
+		kvi->c.key=_key;
+	}}
+	//Funciones
+	{durchVectorp(MacFun,globals->kvs.funcs){
+		const char8_t *pkeyj=KeyKeyg(p);
+		{const char8_t *pj=expanded2;
+		while(*pj!='\0' && *pkeyj==*pj) pj++, pkeyj++;
+		if(*pj!='\0') continue;}
+		b=1;
+
+		u16int len=strlen8(expanded)+strlen8(pkeyj)+1;
+		if(nombre.n<len){
+			len+=20; len&=~3U;
+			nombre.ptr=realloc(nombre.ptr,len*usizeof(char8_t));
+			ifunlike(nombre.ptr==NULL) goto salida_outofmem;
+			nombre.n=len;
+		}
+		{char8_t *pj=strpcpy8(nombre.ptr,expanded); strcpy8(pj,pkeyj);}
+
+		MacFun *kvi=findcreate_func_0(&globals->kvs,nombre.ptr);
+		//El entero str queda igual en las dos claves: <rootj><pkeyj>.c.str y <rooti><pkeyj>.c.str apuntarán a la misma cadena en memoria
+		//Lo mismo para la lista de argumentos
+		uint _key=kvi->c.key;
+		*kvi=*p;
+		kvi->c.key=_key;
+	}}
+	//
+	free(nombre.ptr);
+
+	if(!b){
+		WARNING(&globals->errors,u8"No se ha copiado nada en la instrucción \"%s %s\" porque no había ninguna clave cuya raíz fuese %s",PTR,expanded,expanded2);
+		globals->errors.war_count++;
+	}
+	goto continuar;
+}
+
+ifKW(KW_cleanspaces){
+	LOGcomname(commands,LCOMMANDS);
+
+	expand_buf_keyword_noempty(&buffer,expanded,&globals->kvs,&globals->errors,&globals->log,PTR);
+	ifunlike(globals->errors.err==VAR_INVALID_NAME) goto continuar;
+	KeyVal kv=find_key_0(&globals->kvs,expanded);
+	ifunlike(kv.p.obj==NULL){
+		WARNING(&globals->errors,u8"La clave %s no ha sido definida",expanded);
+		goto warning_y_continuar;
+	}
+
+	MacroCommon *c;
+	char8_t *p, *end;
+	if(kv.macro_type==MACRO_OBJECT) c=&kv.p.obj->c;
+	else c=&kv.p.fun->c;
+	p=ComStr(globals,c); end=clean_spaces(p);
+	c->strsize=(pdif)(end-p);
+	*p++=' '; *p='\0';
+
+	goto continuar;
+}
+
+ifKW(KW_type){
+	umint type;
+	LOG(commands,LCOMMANDS,f,"%s %Sn\n",PTR,buffer.pc);
+
+	char8_t *pclave=buffer.pc;
+	expand_buf_keyword_noempty(&buffer,expanded,&globals->kvs,&globals->errors,&globals->log,PTR);
+	ifunlike(globals->errors.err==VAR_INVALID_NAME) goto continuar;
+	KeyVal kv=find_key_0(&globals->kvs,expanded);
+	if(kv.macro_type==MACRO_SPECIAL){
+		ERROR(&globals->errors,u8"La clave %s no puede ser un comando predefinido",expanded);
+		goto error_y_continuar;
+	}
+	if(kv.macro_type==MACRO_FUNC){
+		ERROR(&globals->errors,u8"La clave %s no puede ser una función",expanded);
+		goto error_y_continuar;
+	}
+	if(kv.p.obj==NULL){
+		WARNING(&globals->errors,u8"La clave %s no ha sido definida",expanded);
+		goto warning_y_continuar;
+	}
+
+	Advanceinline(buffer);
+	ifunlike_Nomore(buffer){
+		if(*buffer.pc==COMMENT_CHAR) *buffer.pc=' ';
+		ERROR(&globals->errors,u8"Falta el tipo de dato en la instrucción de asignación de tipo: %s %Sb",PTR,pclave);
+		goto error_y_continuar;
+	}
+	prepare_string(buffer);
+	ifz(strcmp8(buffer.pc,"string")) type=VAL_TYPE_string;
+	elifz(strcmp8(buffer.pc,"bool")) type=VAL_TYPE_bool;
+	elifz(strcmp8(buffer.pc,"entero")) type=VAL_TYPE_uint;
+	elifz(strcmp8(buffer.pc,"medida")) type=VAL_TYPE_sMedida;
+	elifz(strcmp8(buffer.pc,"float")) type=VAL_TYPE_float;
+	else{
+		type=VAL_TYPE_unknown;
+		ERROR(&globals->errors,u8"Se ha pedido asignar a %Sb el tipo %s. Ese tipo no existe",pclave,buffer.pc);
+		resume(buffer); goto error_y_continuar;
+	}
+	resume(buffer);
+
+	if(type==VAL_TYPE_string){
+		make_string_macobj(&globals->kvs,kv.p.obj);
+		kv.p.obj->value.type=VAL_TYPE_string;
+	}else{
+		if(kv.p.obj->c.exp_pending){
+			ERROR(&globals->errors,u8"Se ha pedido asignar a %Sb el tipo %s. No es posible porque la variable aún no está completamente expandida.",pclave,TypesStrings[type]);
+			goto error_y_continuar;
+		}
+		Parse_error_Value parse_value;
+		switch(type){
+		case VAL_TYPE_bool: parse_value=&parse_error_Bool; break;
+		case VAL_TYPE_uint: parse_value=&parse_error_Entero; break;
+		case VAL_TYPE_sMedida: parse_value=&parse_error_sMedida; break;
+		case VAL_TYPE_float: parse_value=&parse_error_Float; break;
+		}
+		parse_value(&kv.p.obj->value,KeyStrg(kv.p.obj),&globals->errors,KeyKeyg(kv.p.obj),KeyFile(globals,kv.p.obj),KeyLine(globals,kv.p.obj));
+	}
+	goto continuar;
+}

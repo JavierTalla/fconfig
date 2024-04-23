@@ -1,0 +1,265 @@
+{
+//typeof(buffer.lc) lc_name;  //Número de línea en la que aparece el nombre (e. d., buffer.lc ahora)
+uint lc_name;
+char8_t *pp; //Para MACRO_FUNC, queda apuntando al principio de la lista de argumentos, cerrada por '\0'
+bint bad_name=0, //Si el nombre no es válido.
+	  bad_syntax=0; //Error de sinxtaxis antes del =. Por ejemplo var(l, t =  %Falta el ) de cierre
+bint ignore_def=0;
+char8_t *pbrace; //Si la def. empieza por '{' apuntará al último '}' de la línea o quedará a NULL si no hay ninguno
+KeyVal kv;
+MacroCommon *com;
+//No añadimos la clave a kvs hasta el final por si la propia clave aparece en la cadena para expandir. P.e.: var=$(var)
+MacObj kv_OBJ;	//El objeto que estamos definiendo
+MacFun kv_FUN;	//La función que estamos definiendo
+
+//Mirar si es un nombre de variable válido
+lc_name=buffer.lc;
+kv.macro_type=MACRO_OBJECT;
+pp=(char8_t*)PTR;
+while(*pp!='\0' && !isopen(*pp) && !isclose(*pp)) pp++;
+if(*pp=='('){
+	kv.macro_type=MACRO_FUNC;
+	char8_t *pclose=find_closing_paren_n0(pp,NULL);
+	*pp++='\0';
+	if(*pclose!=')'){
+		bad_syntax=1;
+		ERROR(&globals->errors,u8"Falta el ) de cierre en la definición de la macro %s",PTR);
+		globals->errors.err_count++;
+		goto bad_syntax;
+	}
+	*pclose++='\0';
+	ifunlike(*pclose!='\0'){
+		WARNING(&globals->errors,u8"Caracteres ignorados tras el ) de cierre en la definición de la macro %s",PTR);
+		globals->errors.war_count++;
+	}
+}elif(*pp!='\0'){
+	 bad_name=1;
+}
+bad_syntax:
+
+ifzunlike(strcmp8(PTR,"replace")) bad_name=1;
+else ifzunlike(strcmp8(PTR,"Replace")) bad_name=1;
+
+ifunlike(bad_name || bad_syntax) ignore_def=1;
+elif(globals->state.override && find_key_0(&globals->kvs,PTR).p.obj!=NULL) ignore_def=1;
+else{ //Se va a leer la definición y añadir la macro.
+	if(kv.macro_type==MACRO_OBJECT){
+		kv.p.obj=&kv_OBJ;
+		com=&kv.p.obj->c;
+		MacObj_defaults(kv_OBJ);
+	}else{
+		kv.p.fun=&kv_FUN;
+		com=&kv.p.fun->c;
+		MacFun_defaults(kv_FUN);
+		//Parsear la lista de argumentos
+		//pp apunta a la lista de argumentos, '\0'-ended
+		while(is_st(*pp)) pp++; //See if there are no arguments at all
+		if(*pp=='\0') kv.p.fun->args=KV_Key_null;
+		else{
+		   kv.p.fun->args=(pdif)(globals->kvs.strs.next-globals->kvs.strs.ppio);
+		   do{ //pp apunta a la lista de argumentos, '\0'-ended
+			//Aquí puede ser *pp='\0', si la lista termina en ,)  o sea, aquí en  ,'\0'
+			ifunlike(kv.p.fun->nargs==KV_NARGS_MAX){
+				Error_F(&globals->errors,lc_name,u8"Demasiados argumentos en la definición de %s. El máximo permitido es %u.",PTR,KV_NARGS_MAX);
+				globals->errors.err_count++;
+				break;
+			}
+			kv.p.fun->nargs++;
+			char8_t *parg=pp; while(is_st(*parg)) parg++;
+			pp=parg; while(*pp!=',' && *pp!='\0') pp++;
+			ifunlike(parg==pp){Addstr_c('\0');}
+			else{ //hence, *parg!= ' ','\t'
+				char8_t c=*pp; *pp='\0';
+				char8_t *pend=pp;
+				do pend--; while(is_st(*pend)); pend++;
+				if(pend!=pp){*pp=c; c=*pend; *pend='\0';}
+				Addstr_end(parg,pend); Addstr_close('\0');
+				*pend=c;
+			}
+			if(*pp=='\0') break;
+			pp++;
+		   }while(1);
+		}
+		kv.p.fun->nreplacements=0;
+	}
+	//
+	com->file=globals->state.nfile;
+	com->line=buffer.lc;
+	if_Nomore(buffer) goto done_withkv;
+}
+
+pbrace=NULL;
+//Mirar si es una asignación ={ y en ese caso si es de una linea o multiline, pero no hacer nada.
+if(*buffer.pc=='{'){
+	bint bbrace=0; //Si se ha encontrado algo tras el último brace } (no se debería)
+
+	buffer.next=buffer.pc+1;
+	while(*buffer.next!='\n' && !(*buffer.next==COMMENT_CHAR && is_st(buffer.next[-1]))){
+		if(*buffer.next=='}') pbrace=buffer.next, bbrace=0;
+		else bbrace=isnot_st(*buffer.next);
+		buffer.next++;
+	}
+
+	if(pbrace!=NULL){ //Single line string
+		if(_unlikely(bbrace) && !ignore_def){
+			savecharnext(buffer);
+			WARNING(&globals->errors,"Caracteres inesperados tras el último '}' en la línea de asignación de %s: %s",PTR,buffer.pc);
+			globals->errors.war_count++;
+			*buffer.next=buffer.savedchar;
+		}
+	}
+}
+
+if(ignore_def){
+	if(*buffer.pc=='{' && pbrace==NULL){ //Multiline definition
+		do{finishline(buffer); Advanceinline(buffer);}
+		while(*buffer.pc!='\0' && *buffer.pc!='}');
+		ifunlike(*buffer.pc=='\0'){
+			Error_F(&globals->errors,lc_name,u8"Runaway argument. En la asignación de %s (que se ignora) se ha llegado al final del fichero; falta el '}' de cierre",PTR);
+			globals->errors.err_count++;
+		}
+	}
+	if(bad_name){
+		Error_F(&globals->errors,lc_name,u8"Nombre inválido para una variable o macro: %s",PTR);
+		globals->errors.err_count++;
+	}
+	goto continuar;
+}
+
+/** Copiar la caadena de reemplazo **/
+
+/*Todas las ramas de código a partir de aquí han de dejar kvs.strs.next apuntando
+a la posición past el final de la cadena, que se copiará donde está ahora kvs.strs.next. */
+com->str=(pdif)(globals->kvs.strs.next-globals->kvs.strs.ppio);
+
+if(kwass.ass==ASS_EqDef){ //Copiar literalmente
+	//Reemplazar esta macro por una nested function o lambda
+	#define add_bufline(ppio,buffer) \
+		buffer.savedchar=*buffer.pc; *buffer.pc='\0';\
+		if(kv.macro_type==MACRO_OBJECT){Addstr_end(ppio,buffer.pc);}\
+		else{strcpy8(expanded,ppio); replace_arg_names(kv.p.fun->nargs,KeyArgsg(kv.p.fun),expanded,&globals->errors,GET_LINE,PTR);\
+		Addstr_0(expanded);}\
+		*buffer.pc=buffer.savedchar;
+
+	if(*buffer.pc=='{' && pbrace==NULL){ //Multiline definition
+		finishline(buffer);
+		Advanceinline(buffer);
+		while(*buffer.pc!='\0' && *buffer.pc!='}'){
+			const char8_t *ppio=buffer.pc;
+			bufline_find_last(&buffer);
+			add_bufline(ppio,buffer); Addstr_close('\n');
+			finishline(buffer);
+			Advanceinline(buffer);
+		}
+		*globals->kvs.strs.next='\0';
+		check_end_multiline(&buffer,lc_name,&globals->errors,PTR,&globals->kvs);
+	}else{
+		char8_t *ppio=buffer.pc;
+		if(*buffer.pc=='{'){ppio++; buffer.pc=pbrace;}
+		else{bufline_find_last(&buffer);}
+		add_bufline(ppio,buffer);
+	}
+	#undef add_bufline
+
+	//Comprobar si hay algún $, y en ese caso marcar de ahí hasta el último no-blanco como pendiente de expansión
+	com->exp_pending=0;
+	char8_t *ps=globals->kvs.strs.ppio+com->str;
+	while(*ps!='\0' && *ps!='$') ps++;
+	if(*ps=='$'){
+		arrayinsert1_Type(char8_t,ps,KV_BeginExpand,(pdif)(globals->kvs.strs.next-ps));
+		ps=globals->kvs.strs.next++;
+		while(is_stn(*ps)) ps--;
+		++ps; arrayinsert1_Type(char8_t,ps,KV_EndExpand,(pdif)(globals->kvs.strs.next-ps));
+		globals->kvs.strs.next++;
+		com->exp_pending=1;
+	}
+
+	goto done_withline;
+}
+
+//kwass.ass==ASS_Eq
+if(*buffer.pc=='{' && pbrace==NULL){ //Multiline string
+	finishline(buffer);
+	Advanceinline(buffer);
+	while(*buffer.pc!='\0' && *buffer.pc!='}'){
+		const char8_t *line=buffer.pc;
+		char8_t *endl;
+		if(kv.macro_type==MACRO_OBJECT){
+			endl=expand_bufline(&buffer,expanded,&globals->kvs,&globals->errors,&globals->log);
+		}else{
+			char8_t *s=expanded2; //Primero reemplazar #, se hace en expanded2. Luego expandir.
+			while(*buffer.pc!='\n') *s++=*buffer.pc++; *s='\0';
+			replace_arg_names(kv.p.fun->nargs,KeyArgsg(kv.p.fun),expanded2,&globals->errors,GET_LINE,PTR);
+			endl=exptext_reglas_0(expanded2,expanded,&globals->kvs,&globals->errors,GET_LINE,&globals->log);
+		}
+		ifnzunlike(globals->errors.err) wrong_line_n(&globals->errors,line);
+		*endl++='\n'; *endl='\0';
+		Addstr_end(expanded,endl);
+		finishline(buffer);
+		Advanceinline(buffer);
+	}
+	check_end_multiline(&buffer,lc_name,&globals->errors,PTR,&globals->kvs);
+}else{
+	const char8_t *line=buffer.pc;
+	if(*buffer.pc=='{'){
+		*pbrace='\0';
+		if(kv.macro_type==MACRO_OBJECT){
+			exptext_reglas_0(buffer.pc+1,expanded,&globals->kvs,&globals->errors,GET_LINE,&globals->log);
+		}else{
+			char8_t *s=expanded2; //Primero reemplazar #, se hace en expanded2. Luego expandir.
+			buffer.pc++; while(*buffer.pc!='\0') *s++=*buffer.pc++; *s='\0';
+			replace_arg_names(kv.p.fun->nargs,KeyArgsg(kv.p.fun),expanded2,&globals->errors,GET_LINE,PTR);
+			exptext_reglas_0(expanded2,expanded,&globals->kvs,&globals->errors,GET_LINE,&globals->log);
+		}
+		*pbrace='}';
+		buffer.pc=pbrace;
+	}else{
+		if(kv.macro_type==MACRO_OBJECT){
+			expand_bufline(&buffer,expanded,&globals->kvs,&globals->errors,&globals->log);
+		}else{
+			char8_t *s=expanded2; //Primero reemplazar #, se hace en expanded2. Luego expandir.
+			while(*buffer.pc!='\n') *s++=*buffer.pc++; *s='\0';
+			replace_arg_names(kv.p.fun->nargs,KeyArgsg(kv.p.fun),expanded2,&globals->errors,GET_LINE,PTR);
+			exptext_reglas_0(expanded2,expanded,&globals->kvs,&globals->errors,GET_LINE,&globals->log);
+		}
+	}
+	iflike(*expanded!='\0'){
+		Addstr_0(expanded); //La línea expandida
+	}
+	ifnzunlike(globals->errors.err) wrong_line_eq_0n(&globals->errors,PTR,line);
+}
+globals->errors.err=0;
+
+{char *ptr=globals->kvs.strs.ppio+com->str,
+		*end=globals->kvs.strs.next;
+while(ptr!=end && *ptr!=KV_BeginExpand) ptr++;
+com->exp_pending=(*ptr==KV_BeginExpand);
+}
+
+done_withline:
+//NO SE PUEDE copiar la nueva cadena en el espacio de la antigua, porque puede haber otra apuntando
+//a ese mismo sitio
+com->strsize=(pdif)(globals->kvs.strs.next-ComStr(globals,com));
+Addstr_c(' '); Addstr_c('\0');
+
+//Obtener el número de #(arg) en el texto de reemplazo
+if(kv.macro_type==MACRO_FUNC){
+	uint n=0;
+	for(const char8_t *p=KeyStrg(kv.p.fun); *p!='\0'; p++){
+		if(*p==KV_Substitute) n++;
+	}
+	kv.p.fun->nreplacements=n;
+}
+
+done_withkv:
+	//Añadir el nombre a strs si aún no está
+	hBase8WhereKey *w=geth_hBase8WhereKey(&globals->kvs.hash,PTR);
+	if(w!=NULL){
+		com->key=Com___WhereKey(&globals->kvs,&w->data)->key;
+	}else{
+		com->key=(pdif)(globals->kvs.strs.next-globals->kvs.strs.ppio);
+		GC8_adds0(globals->kvs.strs,PTR,goto salida_outofmem);
+	}
+	ifunlike(add_to_hash(&globals->kvs,kv)<0) goto salida_outofmem;
+	LOGassign(globals,buffer.lc,&kv,false,kwass.ass);
+}

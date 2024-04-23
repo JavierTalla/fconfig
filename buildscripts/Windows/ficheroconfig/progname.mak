@@ -1,0 +1,2 @@
+progname=ficheroconfig
+exename=fconfig

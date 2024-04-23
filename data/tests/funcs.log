@@ -1,0 +1,39 @@
+Programa 'ficheroconfig', parseador de ficheros fconfig, Mar 16 2024
+
+Invocación del programa:
+
+fconfigd ..\..\fconfig\data\tests\funcs.config
+
+> Buscando el archivo de configuración ..\..\fconfig\data\tests\funcs.config
+(Archivo ..\..\fconfig\data\tests\funcs.config
+SYSTEM [none] = Win
+A(a,foo,c) = asd#(a) |#(foo)| {#(c)}
+b() = {}
+c(,) = { }
+	(6) Error: La variable c es una función pero falta la lista de argumentos a contiuación. La expansión es vacía.
+	            Al expandir la asignación: b = $(c)
+	(7) Warning: La función c se ha definido con 2 argumentos, pero la lista () de argumentos que aparece tiene solo 1 argumentos.
+	b [none] = { }
+	(9) Warning: La función c se ha definido con 2 argumentos, pero la lista () de argumentos que aparece tiene 3 argumentos.
+	            Los argumentos restantes se ignoran
+	A(m,n) = as#(n) f#(m) BB
+	(14) Error: En el texto de reemplazo de A se ha encontrado #p, pero 'p' no se encuentra entre la lista de parámetros de A.
+	(14) Error: En el texto de reemplazo de A se ha encontrado #(ooo), pero "ooo" no se encuentra entre la lista de parámetros de A.
+	A(m,,,,n) = as#(n) f#(m) $(b) ||
+	A [none] = asN fM GG ||
+	----------------------------------------
+	(29) Error: No se encuentra la marco b entre las funciones. Si el carácter '$' va seguido de un nombre sin paréntesis, en lugar de $(nombre), tiene que ser una función.
+	(29) Error: Carácter $ al final de línea o de texto a expandir
+	            Al expandir la asignación: A = $b(jj) $ v hh$
+	A [none] = {  v hh}
+	A [none] = (,L)
+	(33) Warning: La función B.b se ha definido con 3 argumentos, pero la lista () de argumentos que aparece tiene solo 2 argumentos.
+	A [none] = adasL
+	(36) Error: Se encontró $<B.b>. La macro B.b es una función y su invocación ha de ser ${B.b} o $(B.b). Se tratará como si hubiera sido esto último.
+	            Al expandir la asignación: C = L$<B.b>(,,)L
+	C [none] = LadasL
+	----------------------------------------
+	A [none] = [α] {$(b)} [γ]
+	A [none] = [α] {x} [γ]
+fin del archivo ..\..\fconfig\data\tests\funcs.config)
+

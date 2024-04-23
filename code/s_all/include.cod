@@ -1,0 +1,50 @@
+if(kwass.kw==KW_include || kwass.kw==KW_jump){
+	const char8_t *line=buffer.pc;
+	int nret;
+	ifnzunlike(nret=expandlog_fileline(&buffer,globals,PTR,expanded)){
+		wrong_line_0n(&globals->errors,PTR,line);
+		ifKW(KW_include){
+			Error_s(&globals->errors,buffer.lc,u8"LÍNEA INCLUDE IGNORADA");
+			goto continuar;
+		}/*else*/
+		Error_s(&globals->errors,buffer.lc,u8"LÍNEA JUMP IGNORADA");
+		CLOSE_FILE(1)
+		return 0;
+	}
+	makepath8(active_file,SHRT_PATH,ruta_this,expanded); //active_file no va a hacer falta
+	if(globals->log.fich!=0) LOG(commands,LCOMMANDSALL,snl,PTR);
+	else LOG(commands,LCOMMANDS,f,"%s %Sn\n",PTR,line);
+	Vadd(globals->kvs.filenames,uint,(pdif)(globals->kvs.strs.next-globals->kvs.strs.ppio),goto salida_outofmem);
+	GC8_adds0(globals->kvs.strs,active_file,goto salida_outofmem);
+
+	//Cerrar el presente archivo ahora.
+	ifKW(KW_jump){
+		//No hace falta limpiar el estado de Ifs, etc., porque al empezar un fichero nuevo se resetea
+		CLOSE_FILE(1)
+	}
+	LOG(fich,1,ssnl,u8"> Buscando el archivo de configuración ",active_file);
+	uint cur_nf=globals->state.nfile;
+	globals->state.nfile=globals->kvs.filenames.n-1;
+	ifKW(KW_jump){
+		strcpy8(name_scratch,active_file);
+		return RE_PARSE;
+	}
+
+	nret=lee_ficheroconfig_inline(active_file,globals);
+	globals->state.nfile=cur_nf;
+	ifunlike(nret==LEEFICH_STOP) goto end_stop;
+	ifunlike(nret){
+		ifunlike(nret==AT_NOMEM) goto salida_outofmem;
+		if(nret==ATFILEI_BADPATH || nret==ATFILEI_NOFILE){
+			globals->errors.war_count++; LOG(fich,1,s,u8"Warning:  ... no encontrado\n");
+		}else{
+			globals->errors.err_count++; LOG(fich,1,s,u8"Error:  ... no se ha podido abrir\n");
+		}
+	}
+	goto continuar;
+}
+
+if(kwass.kw==KW_stop){
+	LOGcomname(commands,LCOMMANDS);
+	goto end_stop;
+}

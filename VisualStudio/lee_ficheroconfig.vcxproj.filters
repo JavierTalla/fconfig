@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Translation Heads">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Subordinated Source Files">
+      <UniqueIdentifier>{2aab0919-033d-461d-81dc-f649968b911a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Internal">
+      <UniqueIdentifier>{0dd6118a-78de-4b9b-9998-de231f3425ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="comandos">
+      <UniqueIdentifier>{078d5481-4707-4468-ac3e-062557c80e89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="parse_dato">
+      <UniqueIdentifier>{dff32a59-52c5-40ff-b2a5-af38067855e7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(CodePath)\s_all\lee_ficheroconfig.th">
+      <Filter>Translation Heads</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(CodePath)\s_all\configfile_read.c">
+      <Filter>Subordinated Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\s_all\expand.c">
+      <Filter>Subordinated Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\s_all\lee_ficheroconfig.c">
+      <Filter>Subordinated Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\include\fconfig_read.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\include\parsekv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\include\str_fconfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\s_all\lee_fconfig_inline.c">
+      <Filter>Subordinated Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\include\magnitudes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\s_all\dump.c">
+      <Filter>Subordinated Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\include\fconfig_log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\include_internal\configfile_syntax.h">
+      <Filter>Header Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\include_internal\ficheroconfigh.h">
+      <Filter>Header Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\s_all\expand_bufline.c">
+      <Filter>Subordinated Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\s_all\parse_fromstring.c">
+      <Filter>parse_dato</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\s_all\parse_fromkv.c">
+      <Filter>parse_dato</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\s_all\leer_Magnitud.c">
+      <Filter>parse_dato</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\s_all\leevalida_Magnitud.c">
+      <Filter>parse_dato</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\s_all\atend.cod">
+      <Filter>comandos</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\s_all\comandos_otros.cod">
+      <Filter>comandos</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\s_all\IfElse.cod">
+      <Filter>comandos</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\s_all\parse_if.c">
+      <Filter>comandos</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\s_all\log.c">
+      <Filter>Subordinated Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\include\fconfig_utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\s_all\error_parse_write.c">
+      <Filter>parse_dato</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\s_all\keyval_assignment.cod">
+      <Filter>Subordinated Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(CodePath)\s_all\addto_kvs.c">
+      <Filter>Subordinated Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(CodePath)\ficheroconfig.def" />
+    <None Include="$(CodePath)\s_all\diagnostics.cod">
+      <Filter>comandos</Filter>
+    </None>
+    <None Include="$(CodePath)\s_all\include.cod">
+      <Filter>comandos</Filter>
+    </None>
+    <None Include="$(CodePath)\s_all\key_handling.cod">
+      <Filter>comandos</Filter>
+    </None>
+    <None Include="$(CodePath)\s_all\logging.cod">
+      <Filter>comandos</Filter>
+    </None>
+  </ItemGroup>
+</Project>

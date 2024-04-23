@@ -1,0 +1,68 @@
+ifKW(KW_ModoOverride){
+	bint b=read_umint(&buffer.pc,&globals->errors,buffer.lc,PTR,&globals->state.override,1,HI_LEVEL_IGNORE);
+	if(!b){LOG(commands,LCOMMANDS,f,"%s %u\n",KeyWords[kwass.kw].name,globals->state.override);}
+	goto continuar;
+}
+
+if(kwass.kw==KW_ParseIfNotDef || kwass.kw==KW_ParseIfEmpty){
+	LOG(commands,LCOMMANDSALL,snl,PTR);
+
+	buffer.next=key_advance(buffer.pc);
+	if(buffer.next==buffer.pc){
+		ERROR(&globals->errors,u8"El comando %s ha de ir seguido del nombre de una clave. Se encontró %s %Sb",PTR,PTR,buffer.pc);
+		globals->errors.err_count++;
+		goto continuar;
+	}
+
+	savecharnext(buffer);
+	KeyVal kv=find_key_0(&globals->kvs,buffer.pc);
+	restorecharnext(buffer);
+	PTR=buffer.pc;
+	buffer.pc=buffer.next;
+	if(kv.p.obj!=NULL && (kwass.kw==KW_ParseIfNotDef || kv.p.obj->c.strsize!=0)) goto continuar;
+
+	//La clave ha de quedar terminada por '\0'
+	char8_t *fin_clave=buffer.pc;
+	while(is_st(*buffer.pc)) buffer.pc++;
+	ifunlike((kwass.ass=ass_classify(buffer.pc))==ASS_NONE){
+		ERROR(&globals->errors,u8"Falta el token de asignación tras %s %Sb",KeyWords[kwass.kw].name,PTR);
+		globals->errors.err_count++;
+		goto continuar;
+	}
+	buffer.pc=ass_clear(buffer.pc);
+	*fin_clave='\0';
+	Advanceinline(buffer);
+	kwass.kw=KW_NONE;
+	goto keyval_assign;
+}
+
+ifKW(KW_FILE){
+	ifnz(expandlog_fileline(&buffer,globals,PTR,expanded)) goto continuar;
+	LOG(commands,LCOMMANDS,f,"%s %s\n",PTR,expanded);
+	ifunlike(*expanded=='\n') goto ignorar_línea;
+
+	//Hacer lo mismo que en una orden jump
+	makepath8(active_file,SHRT_PATH,ruta_this,expanded);
+	Vadd(globals->kvs.filenames,uint,(pdif)(globals->kvs.strs.next-globals->kvs.strs.ppio),goto salida_outofmem);
+	GC8_adds0(globals->kvs.strs,active_file,goto salida_outofmem);
+	globals->state.nfile=globals->kvs.filenames.n-1;
+	//fconfig no se cambia. Sólo se emplea para escribir "fin del archivo <fconfig>", que no se ha de cambiar.
+	strcpy8(ruta_this,active_file);
+	path_remove_file8(ruta_this);
+	goto continuar;
+}
+
+ifKW(KW_LINE){
+	LOGcomname(commands,LCOMMANDSALL);
+	ifnz(expandlog_bufline(&buffer,globals,PTR,expanded)) goto continuar;
+	ifunlike(*expanded=='\n') goto ignorar_línea;
+	char8_t *pe=expanded; str_no_st(pe);
+
+	uint u=uint___str8(CAST(&pe));
+	if(is_stnC(*pe)) buffer.lc=u;
+	else{ str_stnC(pe); *pe='\0';
+		WARNING(&globals->errors,u8"La palabra que sigue a \"LINE =\" no es un número entero: %s",expanded);
+		globals->errors.war_count++;
+	}
+	goto continuar;
+}

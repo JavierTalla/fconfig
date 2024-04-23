@@ -1,0 +1,81 @@
+#undef log_leyval
+
+ifKW(KW_loggingall){
+	LOGcomname(commands,LCOMMANDS);
+	SetLogAll(globals->log);
+	goto continuar;
+}
+ifKW(KW_loggingnone){
+	LOGcomname(commands,LCOMMANDS);
+	SetLogNone(globals->log);
+	goto continuar;
+}
+ifKW(KW_loggingdefault){
+	LOGcomname(commands,LCOMMANDS);
+	SetLogDefault(globals->log);
+	globals->errors.err_war=LWAR;
+	goto continuar;
+}
+
+/* A partir de aquí todos los comandos requieren expandir la línea */
+
+//These look at the string pointed to by pe and the word is ' '-terminated.
+#define isVAL(s) (strcmp8_st(pe,s)==0)
+#define ifVAL(s) if(isVAL(s))
+#define elifVAL(s) else ifVAL(s)
+
+ifnz(expandlog_bufline(&buffer,globals,PTR,expanded)) goto continuar;
+ifunlike(*expanded=='\n') goto ignorar_línea;
+char8_t *pe=expanded; str_no_st(pe);
+
+ifKW(KW_logging){
+	ifVAL("off") globals->errors.blog=NULL;
+	elifVAL("on"){globals->errors.blog=globals->BLOG; LOG(commands,LCOMMANDS,s,u8"Activado el log\n");}
+	else{
+		WARNING(&globals->errors,u8"Tras la plabra \"logging\" tiene que venir \"on\" o \"off\". Se encontró \"%Ss\"",expanded);
+		globals->errors.war_count++;
+	}
+	goto continuar;
+}
+
+ifKW(KW_logonline){
+	if(*pe=='\n'){globals->errors.on=1; LOG(commands,LCOMMANDSALL,snl,KeyWords[kwass.kw].name);}
+	else{
+		LOG(commands,LCOMMANDSALL,f,"%s %Ss\n",KeyWords[kwass.kw].name,pe);
+		ifVAL("on") globals->errors.on=1;
+		elifVAL("off") globals->errors.on=0;
+		else{
+			WARNING(&globals->errors,u8"Tras la plabra \"logonline\" tiene que venir \"on\", \"off\" o nada. Se encontró \"%Ss\"",expanded);
+			globals->errors.war_count++;
+		}
+	}
+	goto continuar;
+}
+
+ifKW(KW_logerrors){
+	bint b=read_umint(&pe,&globals->errors,buffer.lc,PTR,&globals->errors.err_war,2,HI_LEVEL_HIGHEST);
+	if(!b){LOG(commands,LCOMMANDS,f,"%s %u\n",KeyWords[kwass.kw].name,globals->errors.err_war);}
+	goto continuar;
+}
+
+if(kwass.kw>=KeyWord_LogcasesMin && kwass.kw<KeyWord_LogcasesTope){
+	size_t k;
+
+	switch(kwass.kw){
+	case KW_logfiles: k=offsetof(strLog,fich); break;
+	case KW_logcommands: k=offsetof(strLog,commands); break;
+	case KW_logbranches: k=offsetof(strLog,branches); break;
+	case KW_logassigns: k=offsetof(strLog,assigns); break;
+	case KW_logvars: k=offsetof(strLog,vars); break;
+	case KW_logmacros: k=offsetof(strLog,macros); break;
+	case KW_formatmsg: k=offsetof(strLog,formatmsg); break;
+	}
+	umint *p=(umint*)((char*)&globals->log+k);
+	bint b=read_umint(&pe,&globals->errors,buffer.lc,PTR,p,3,HI_LEVEL_HIGHEST);
+	if(!b){LOG(commands,LCOMMANDS,f,"%s %u\n",KeyWords[kwass.kw].name,*p);}
+	goto continuar;
+}
+
+#undef isVAL
+#undef ifVAL
+#undef elifVAL

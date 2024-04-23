@@ -1,0 +1,108 @@
+#define Blog globals->errors.blog
+
+ifKW(KW_echo){
+	if(Blog==NULL && !globals->errors.on) goto continuar;
+	LOGcomname(commands,LCOMMANDSALL);
+	const char8_t *line=buffer.pc;
+
+	expand_bufline(&buffer,expanded,&globals->kvs,&globals->errors,&globals->log);
+	ifnzunlike(globals->errors.err){
+		wrong_line_0n(&globals->errors,PTR,line);
+	}else{
+		LOGindent(&globals->errors);
+		if(Blog!=NULL) towrite_stringl(Blog,expanded,'\n');
+		if(globals->errors.on){fputs(expanded,stderr); putc('\n',stderr);}
+	}
+	goto continuar;
+}
+
+ifKW(KW_Echo){
+	if(Blog==NULL && !globals->errors.on) goto continuar;
+	LOGcomname(commands,LCOMMANDSALL);
+	Prepareline(buffer);
+	LOGindent(&globals->errors);
+	if(Blog!=NULL) towrite_stringl(Blog,buffer.pc,'\n');
+	if(globals->errors.on){fputs(buffer.pc,stderr); putc('\n',stderr);}
+	resume(buffer);
+	goto continuar;
+}
+
+ifKW(KW_error){
+	LOGcomname(commands,LCOMMANDSALL);
+	iferrwar(&globals->errors,LERR){
+		Prepareline(buffer);
+		if(globals->log.formatmsg) Error_s(&globals->errors,buffer.lc,buffer.pc);
+		else log_snl(Blog,globals->errors.on,globals->errors.indent,GET_LINE,buffer.pc);
+		resume(buffer);
+	}
+	globals->errors.err_count++;
+	goto continuar;
+}
+
+ifKW(KW_warning){
+	LOGcomname(commands,LCOMMANDSALL);
+	iferrwar(&globals->errors,LERR){
+		Prepareline(buffer);
+		if(globals->log.formatmsg) Warning_s(&globals->errors,buffer.lc,buffer.pc);
+		else log_snl(Blog,globals->errors.on,globals->errors.indent,GET_LINE,buffer.pc);
+		resume(buffer);
+	}
+	globals->errors.war_count++;
+	goto continuar;
+}
+
+ifKW(KW_show){
+	if(Blog==NULL && !globals->errors.on) goto continuar;
+	LOGcomname(commands,LCOMMANDSALL);
+
+	expand_buf_keyword_noempty(&buffer,expanded,&globals->kvs,&globals->errors,&globals->log,PTR);
+	ifunlike(globals->errors.err==VAR_INVALID_NAME) goto continuar;
+	KeyVal kv=find_key_0(&globals->kvs,expanded);
+	if(kv.macro_type==MACRO_SPECIAL){
+		LOGindent(&globals->errors);
+		if(Blog!=NULL) towritef(Blog,"%s [especial] = \n",expanded);
+		if(globals->errors.on) fprintf(stderr,"%s [especial] = \n",expanded);
+	}elif(kv.p.obj==NULL){
+		LOGindent(&globals->errors);
+		if(Blog!=NULL) towritef(Blog,"%s [undefined]\n",expanded);
+		if(globals->errors.on) fprintf(stderr,"%s [undefined]\n",expanded);
+	}elif(kv.macro_type==MACRO_OBJECT){
+		if(Blog!=NULL) LOGmacobj(globals,kv.p.obj,true);
+		if(globals->errors.on) LOGmacobj_err(globals,kv.p.obj,true);
+	}else{
+		if(Blog!=NULL) LOGmacfun(globals,kv.p.fun,true);
+		if(globals->errors.on) LOGmacfun_err(globals,kv.p.fun,true);
+	}
+	goto continuar;
+}
+
+ifKW(KW_showall){
+	if(Blog==NULL && !globals->errors.on) goto continuar;
+	LOGcomname(commands,LCOMMANDSALL);
+	if(Blog!=NULL){
+		{durchVectorp(MacObj,globals->kvs.objs) LOGmacobj(globals,p,false);}
+		{durchVectorp(MacFun,globals->kvs.funcs) LOGmacfun(globals,p,false);}
+	}
+	if(globals->errors.on){
+		{durchVectorp(MacObj,globals->kvs.objs) LOGmacobj_err(globals,p,false);}
+		{durchVectorp(MacFun,globals->kvs.funcs) LOGmacfun_err(globals,p,false);}
+	}
+	goto continuar;
+}
+
+ifKW(KW_dump){
+	LOGcomname(commands,LCOMMANDSALL);
+	if(*buffer.pc=='\n'){
+		dump_kvs_online(&globals->kvs);
+	}else{
+		next_fwd_save(buffer);
+		makepath8(active_file,SHRT_PATH,ruta_this,buffer.pc);
+		resume(buffer);
+		ifnz(dump_kvs(active_file,&globals->kvs)){
+			globals->errors.err_count++;
+		}
+	}
+	goto continuar;
+}
+
+#undef Blog

@@ -1,0 +1,66 @@
+﻿#define COMPILING_FICHEROCONFIG
+#include "../include/fconfig_read.h"
+#include "../include/fconfig_utils.h"
+#include <ATcrt/ATcrt_utils.h>
+#include <ATcrt/AT_fileutils.h>
+#include <ATcrt/fileinput_linecount.h>
+#include <ATcrt/definesBufferto8.h>
+#include <malloc.h>
+#include <stdio.h>
+#include <assert.h>
+#include <stdarg.h>
+VISIBILITY_BLOCK_module
+#include "../include_internal/ficheroconfigh.h"
+#include "log.c"
+#include "leer_Magnitud.c"
+#include "leevalida_Magnitud.c"
+#include "error_parse_write.c"
+#include "parse_fromstring.c"
+#include "expand.c"
+#include "expand_bufline.c"
+#include "parse_if.c"
+#include "dump.c"
+#include "configfile_read.c"
+#include "addto_kvs.c"
+#include "lee_fconfig_inline.c"
+#include "lee_ficheroconfig.c"
+//For users. Not used internally
+#include "parse_fromkv.c"
+
+
+/* To be done:
+
+* Expansiones con # al principio de línea. En este caso la palabra que sigue a # es el nombre
+de la macro, que ha de ser function-like:
+
+longmacro()={
+$(a) = texto $${$(b)}
+...
+}
+
+#longmacro()
+
+    Esto permite macros que definan otras macros. En el ejemplo, la expansión de #longmacro()
+define una variable cuyo nombre es el resultado de la expansión de $(a) en el momento de
+definir longmacro. En las expansiones # el resultado es un conjunto de líneas que se lee
+como si hubieran estado allí. Por tanto el carácter $ conserva su valor aunque proceda de un $$,
+al igual que # procedente de # o de ##.
+    Como un uso frecuente para esta construcction probablemente sea definir una macro,
+inmediatamente expandirla y no volver a usarla más, se proporcionará un comando para ello:
+
+expand{
+$(a) = texto $${$(b)}
+...
+}
+
+* Una macro predefinida (keyword) para reemlazar texto:
+replace(a, b, texto)
+
+a, b y texto se expande y luego se reemplaza en texto b por a.
+    Tal vez otra que no expanda a y b:
+Replace(a, b, texto)
+
+Tal vez variantes para reemplazar solamente la primera ocurrencia:
+replacefirst
+Replacefirst
+*/

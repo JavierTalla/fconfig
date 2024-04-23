@@ -1,0 +1,40 @@
+EXPORTS
+	lee_ficheroconfig
+	dump_kvs
+	dump_kvs_online
+
+	lee_valida_Bool
+	lee_valida_Entero
+	lee_valida_LongitudTabla
+	lee_valida_uLongitudTabla
+	lee_valida_sLongitudTabla
+	lee_valida_LongitudTierraZ
+	lee_valida_uLongitudTierraZ
+	lee_valida_LongitudTierraPeq
+	lee_valida_uLongitudTierraPeq
+	lee_valida_sLongitudTierraPeq
+	lee_valida_LongitudTierraGra
+	lee_valida_uLongitudTierraGra
+	lee_valida_Tiempo
+	lee_valida_uTiempo
+	lee_valida_uFloat
+	lee_valida_sFloat
+	error_Bool_err
+	error_Entero_err
+	error_Magnitud_err
+	error_Float_err
+	parse_Bool
+	parse_Entero
+	parse_Medida
+	parse_Float
+	parse_unknown
+
+	String___keyval
+	Bool___keyval
+	Entero___keyval
+	Medida___keyval
+	sMedida___keyval
+	uFloat___keyval
+	sFloat___keyval
+
+	writef_Cfile
