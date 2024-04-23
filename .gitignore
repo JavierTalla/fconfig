@@ -1,21 +1,10 @@
 #Cualquier cosa que queramos que se ignore la ponemos en el directorio ./ignorar/
 ignorar/*
 desktop.ini
-.vs/*
-buildscripts/Linux/build.log
-buildscripts/Windows/build.log
+.vs/
+*.log
 AerotriLibs/lib
-AerotriLibs/lib/*
-output/bin/common/config/local/*
-bin/Win-amd64/Debug/*
-bin/Win-amd64/Release/*
+Debug/
+Release/
+*.pdb
 bin/Win-amd64/*d.*
-bin/Win-amd64/*.pdb
-bin/Linux-amd64/Release/*
-bin/Linux-amd64/Debug/*
-bin/Linux-amd64/3dCarvingd
-bin/Linux-amd64/fconfigd
-bin/Linux-amd64/tinsd
-bin/Linux-arm/Release/*
-#output/bin/Linux-aarch64/Release/*
-VisualStudio/.vs/*
