@@ -1,1 +1,3 @@
-../../../buildscripts_shared/Linux/gcc-d.sh
+#!/bin/bash
+setup="compiler=gcc debug=1"
+source linux_common.sh

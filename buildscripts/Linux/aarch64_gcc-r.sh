@@ -1,1 +1,3 @@
-../../../buildscripts_shared/Linux/aarch64_gcc-r.sh
+#!/bin/bash
+setup="arch=aarch64 compiler=gcc"
+source linux_common.sh

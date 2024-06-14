@@ -18,10 +18,11 @@
 	#define main wmain
 #endif
 
-int main(int _unused(argc), charfile_t **argv){
+int main(int _unused(argc), charmain_t **_argv){
 	int nret;
 	struct OutDir od;
 	Bufferto8 blog;
+	charfile_t **argv=(charfile_t**)_argv;
 	charfile_t** const ARGV=argv; //Para escribir en el log.
 	FicheroConfig config;
 
@@ -57,10 +58,10 @@ int main(int _unused(argc), charfile_t **argv){
 	nret=lee_ficheroconfig(&config,od.fout8,&blog);
 	toclose(&blog);
 	ifnzunlike(nret){PUTerr(u8"No se puede abrir el fichero: "); PUTerrnl(od.fout8); return 5;}
-	strcpy8(od.ext,".log");
+	strcpy8(od.ext,u8".log");
 	PUTerr(u8"Terminado. Log escrito en "); PUTerrnl(od.fout8);
 
-	nret=0; /*strcpy8(od.ext,"_dump.config");
+	nret=0; /*strcpy8(od.ext,u8"_dump.config");
 	nret=dump_keyvals(od.fout8,&config.kvs);
 	ifunlike(nret<0){PUTerr(u8"No se pudo abrir el fichero para el volcado de las claves: "); PUTerrnl(od.fout8); nret=6;}
 	else ifunlike(nret!=0){PUTerr(u8"Se produjo algún error de escritura en el fichero "); PUTerrnl(od.fout8); nret=0;}

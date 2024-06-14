@@ -1,1 +1,3 @@
-../../../buildscripts_shared/Linux/gcc-r.sh
+#!/bin/bash
+setup="compiler=gcc"
+source linux_common.sh

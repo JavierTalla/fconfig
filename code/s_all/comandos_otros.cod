@@ -1,6 +1,6 @@
 ifKW(KW_ModoOverride){
 	bint b=read_umint(&buffer.pc,&globals->errors,buffer.lc,PTR,&globals->state.override,1,HI_LEVEL_IGNORE);
-	if(!b){LOG(commands,LCOMMANDS,f,"%s %u\n",KeyWords[kwass.kw].name,globals->state.override);}
+	if(!b){LOG(commands,LCOMMANDS,f,u8"%s %u\n",KeyWords[kwass.kw].name,globals->state.override);}
 	goto continuar;
 }
 
@@ -38,7 +38,7 @@ if(kwass.kw==KW_ParseIfNotDef || kwass.kw==KW_ParseIfEmpty){
 
 ifKW(KW_FILE){
 	ifnz(expandlog_fileline(&buffer,globals,PTR,expanded)) goto continuar;
-	LOG(commands,LCOMMANDS,f,"%s %s\n",PTR,expanded);
+	LOG(commands,LCOMMANDS,f,u8"%s %s\n",PTR,expanded);
 	ifunlike(*expanded=='\n') goto ignorar_línea;
 
 	//Hacer lo mismo que en una orden jump

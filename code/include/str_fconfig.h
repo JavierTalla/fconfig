@@ -35,12 +35,12 @@ VAL_TYPE_<tipo>, aplicando un complemento a uno.*/
 #define VTYPE_erroneous_float ((umint)~VAL_TYPE_float)
 
 static const char8_t * const TypesStrings[]={
-	[VAL_TYPE_unknown]="none",
-	[VAL_TYPE_string]="string",
-	[VAL_TYPE_bool]="bool",
-	[VAL_TYPE_uint]="entero",
-	[VAL_TYPE_sMedida]="medida",
-	[VAL_TYPE_float]="float",
+	[VAL_TYPE_unknown]=u8"none",
+	[VAL_TYPE_string]=u8"string",
+	[VAL_TYPE_bool]=u8"bool",
+	[VAL_TYPE_uint]=u8"entero",
+	[VAL_TYPE_sMedida]=u8"medida",
+	[VAL_TYPE_float]=u8"float",
 };
 
 typedef struct{

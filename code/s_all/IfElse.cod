@@ -23,9 +23,9 @@ if(lstate.ifS.m>lstate.ifS.lev){ //skipping code
 ifKW(KW_Else){
 	LOGcomname(branches,1);
 	if(lstate.ifS.m!=0){ //If m==0 -> lev=0 y el mensaje de error ya se ha mostrado arriba
-		const char *s=NULL;
-		if(lstate.ifS.state==IFState_True){s="  Se empieza a saltar código\n"; lstate.ifS.state=IFState_Ready;}
-		elif(lstate.ifS.state==IFState_Waiting){s="  Evaluates to true\n"; lstate.ifS.state=IFState_True;}
+		const char8_t *s=NULL;
+		if(lstate.ifS.state==IFState_True){s=u8"  Se empieza a saltar código\n"; lstate.ifS.state=IFState_Ready;}
+		elif(lstate.ifS.state==IFState_Waiting){s=u8"  Evaluates to true\n"; lstate.ifS.state=IFState_True;}
 		if(s!=NULL){LOG(branches,1,s,s);}
 	}
 	goto continuar;
@@ -39,7 +39,7 @@ if(lstate.ifS.state==IFState_Ready
 	//Si encontramos un Elif en el nivel 0 (en este nivel el estado siempre es IFState_True) lo ignoramos.
 	//En ese caso el mensaje de error ya se ha mostrado arriba
 	if(lstate.ifS.state==IFState_True && lstate.ifS.m!=0){ //Empezamos a skip código
-		LOGcomname(branches,1); LOG(branches,1,s,"  Se empieza a saltar código\n");
+		LOGcomname(branches,1); LOG(branches,1,s,u8"  Se empieza a saltar código\n");
 		lstate.ifS.state=IFState_Ready;
 	}
 	elif(Iftype[kwass.kw]==IFTYPE_IF) lstate.ifS.m++;
@@ -84,7 +84,7 @@ if(Iftype[kwass.kw]==IFTYPE_IF){
 		nret=parse_if_member(op1,&blóg1,&val1,expanded,&globals->kvs,&globals->errors,GET_LINE,&globals->log);
 		ifunlike(nret){
 			ifunlike(nret==AT_NOMEM) goto salida_outofmem;
-			const char *s;
+			const char8_t *s;
 			if(nret==PARSEIF_VarUndefined) s=u8"El primer miembro del %s especifica una variable no definida: %Sn", op1++;
 			else s=u8"El primer miembro del %s no se pudo parsear correctamente: %Sn";
 			ERROR_f(&globals->errors,s,PTR,op1);
@@ -95,7 +95,7 @@ if(Iftype[kwass.kw]==IFTYPE_IF){
 		nret=parse_if_member(op2,&blóg2,&val2,expanded2,&globals->kvs,&globals->errors,GET_LINE,&globals->log);
 		ifunlike(nret){
 			ifunlike(nret==AT_NOMEM) goto salida_outofmem;
-			const char *s;
+			const char8_t *s;
 			if(nret==PARSEIF_VarUndefined) s=u8"El segundo miembro del %s especifica una variable no definida: %Sn", op2++;
 			else /*PARSEIF_Syntax*/ s=u8"El segundo miembro del %s no se pudo parsear correctamente: %Sn";
 			ERROR_f(&globals->errors,s,PTR,op2);
@@ -115,10 +115,10 @@ if(Iftype[kwass.kw]==IFTYPE_IF){
 				toput_char(globals->errors.blog,'\n');
 			}
 			if(globals->errors.on){
-				fputs(u8"  After expansion: ",stderr);
+				fputs("  After expansion: ",stderr);
 				do_write_objstr0_stderr(expanded);
 				putc(' ',stderr);
-				fputs(TokenRelationStr[op],stderr); putc(' ',stderr);
+				fputs((CRP)TokenRelationStr[op],stderr); putc(' ',stderr);
 				do_write_objstr0_stderr(expanded2);
 				putc('\n',stderr);
 			}
@@ -165,9 +165,9 @@ if(Iftype[kwass.kw]==IFTYPE_IF){
 	}
 
 	if(isLevel(branches,1)){
-		const char *s;
-		if(btrue) s="  Evaluates to true\n";
-		else s="  Evaluates to false\n";
+		const char8_t *s;
+		if(btrue) s=u8"  Evaluates to true\n";
+		else s=u8"  Evaluates to false\n";
 		LOG(branches,1,s,s);
 	}
 	if(!btrue) lstate.ifS.state=IFState_Waiting;

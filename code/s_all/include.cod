@@ -13,7 +13,7 @@ if(kwass.kw==KW_include || kwass.kw==KW_jump){
 	}
 	makepath8(active_file,SHRT_PATH,ruta_this,expanded); //active_file no va a hacer falta
 	if(globals->log.fich!=0) LOG(commands,LCOMMANDSALL,snl,PTR);
-	else LOG(commands,LCOMMANDS,f,"%s %Sn\n",PTR,line);
+	else LOG(commands,LCOMMANDS,f,u8"%s %Sn\n",PTR,line);
 	Vadd(globals->kvs.filenames,uint,(pdif)(globals->kvs.strs.next-globals->kvs.strs.ppio),goto salida_outofmem);
 	GC8_adds0(globals->kvs.strs,active_file,goto salida_outofmem);
 

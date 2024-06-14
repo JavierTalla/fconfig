@@ -7,7 +7,7 @@ static char8_t* make_string_obj(char8_t *s){
 	while(*s!='\0' && !is_expand(*s)) s++;
 	if(*s=='\0') return s;
 
-	char *pc=s;
+	char8_t *pc=s;
 	do{while(*s!='\0' && is_expand(*s)) s++;
 		while(*s!='\0' && !is_expand(*s)) *pc++=*s++;
 	}while(*s!='\0');
@@ -17,7 +17,7 @@ static char8_t* make_string_obj(char8_t *s){
 
 //Elimina todos los comandos que hubiera en kv->c.str
 sinline void make_string_macobj(const KeyVals *kvs, MacObj *kv){
-	char *pc=make_string_obj(KeyStrp(kv));
+	char8_t *pc=make_string_obj(KeyStrp(kv));
 	kv->c.exp_pending=0;
 	kv->c.strsize=(pdif)(pc-KeyStrp(kv))-1;
 }
@@ -158,7 +158,7 @@ static char8_t* text___val_kv(const KeyVals *kvs, char8_t *expanded, MacObj *kv)
 		if(kv->value.type==VAL_TYPE_sMedida && kv->value.sval<0) *expanded++='-', n=-kv->value.sval;
 		else n=kv->value.val;
 		expanded=str8___uint(expanded,n);
-		if(kv->value.type!=VAL_TYPE_uint) expanded=strpcpy8(expanded," dmm");
+		if(kv->value.type!=VAL_TYPE_uint) expanded=strpcpy8(expanded,u8" dmm");
 		return expanded;
 	}
 
@@ -402,7 +402,7 @@ static char8_t* expand_text_0(char8_t *text, char8_t *expanded, KeyVals *kvs, bi
 			continue;
 		}
 
-		if(logs->macros>=1) LOG_sss(errors,GET_LINE,u8"Expandiendo la variable ",var_name," ...\n");
+		if(logs->macros>=1) LOG_sss(errors,GET_LINE,u8"Expandiendo la variable ",var_name,u8" ...\n");
 		kv=find_key_0(kvs,var_name);
 		if(kv.p.obj==NULL){ //la cadena $(<var>) desaparece
 			if(logs->macros>=1) LOG_s(errors,NO_LINE,u8"\tLa variable no existe. La expansión es vacía.\n");
@@ -636,19 +636,19 @@ static char8_t* expand_Γ(char8_t *pc, char8_t **_pn, KeyVals *kvs, bint btotal,
 	assert(*pc=='[');
 	char8_t *pend=find_closing_paren_n0(pc,NULL);
 	ifunlike(*pend!=']'){
-		char c=*pend; *pend='\0';
+		char8_t c=*pend; *pend='\0';
 		ERROR(errors,u8"No se encontró el paréntesis de cierre correspondiente al '[' de apertura: %s",pc);
 		*pend=c;
 		errors->err_count++; errors->err=VARS_RUNAWAY;
 		return pend;
 	}
-	{char c=*pend; *pend='\0';
+	{char8_t c=*pend; *pend='\0';
 	pclose=exptext_reglas_0(pc+1,pn,kvs,errors,GET_LINE,logs); *pend=c;}
 	pend++;
 	//A partir de aquí para salir por error hay que IR A SALIDA, dejando pc en su posición final
 	ifunlike(errors->err!=0){
 		ifunlike(errors->err<0){pc=pend; goto salida;}
-		char c=*pend; *pend='\0'; ChkErrLiteral(errors,INDENT_ERROR u8"Al expandir la cadena %s\n",pc);
+		char8_t c=*pend; *pend='\0'; ChkErrLiteral(errors,INDENT_ERROR u8"Al expandir la cadena %s\n",pc);
 		*pend=c;
 		err_code=errors->err;
 	}
@@ -669,7 +669,7 @@ static char8_t* expand_Γ(char8_t *pc, char8_t **_pn, KeyVals *kvs, bint btotal,
 	}
 	pend=find_closing_paren_n0(pc,NULL);
 	ifunlike(*pend!=']'){
-		char c=*pend; *pend='\0';
+		char8_t c=*pend; *pend='\0';
 		ERROR(errors,u8"No se encontró el paréntesis de cierre correspondiente al '[' de apertura: %s",pc);
 		*pend=c;
 		errors->err_count++; errors->err=VARS_RUNAWAY;
@@ -680,19 +680,19 @@ static char8_t* expand_Γ(char8_t *pc, char8_t **_pn, KeyVals *kvs, bint btotal,
 		const char8_t *s, *ellipsis;
 		if(*pend=='}') s=u8"En un {[...]} el '}' de cierre tiene que venir inmediatamente a continuación del ']': %s%s";
 		else s=u8"Tras el ']' de cierre falta el '}': %s%s";
-		char c=*pend; if(c!='\0' && c!='\n') pend++;
-		if(*pend=='\0' || *pend=='\n') ellipsis=pend; else ellipsis="...";
+		char8_t c=*pend; if(c!='\0' && c!='\n') pend++;
+		if(*pend=='\0' || *pend=='\n') ellipsis=pend; else ellipsis=u8"...";
 		*pend='\0'; ERROR_f(errors,s,pc-1,ellipsis);
 		if(c!='\0' && c!='\n') pend--;
 		*pend=c;
 		errors->err_count++; errors->err=VARS_SYNTAX;
 		pc=pend; goto salida;
 	}
-	{char c=*pend; *pend='\0'; exptext_total_0(pc+1,expanded2,kvs,errors, GET_LINE,logs); *pend=c;}
+	{char8_t c=*pend; *pend='\0'; exptext_total_0(pc+1,expanded2,kvs,errors, GET_LINE,logs); *pend=c;}
 	pend++;
 	ifunlike(errors->err!=0){
 		ifunlike(errors->err<0){pc=pend+(braced!=0); goto salida;}
-		char c=*pend; *pend='\0'; ChkErrLiteral(errors,INDENT_ERROR u8"Al expandir la cadena %s\n",pc);
+		char8_t c=*pend; *pend='\0'; ChkErrLiteral(errors,INDENT_ERROR u8"Al expandir la cadena %s\n",pc);
 		*pend=c;
 		err_code=errors->err;
 	}
@@ -865,7 +865,7 @@ static int fullexpand_kv(KeyVals *kvs, MacObj *kv, ErrorOpts *errors, uint nlín
 //Además de escribir el código actualiza atend_nfile
 //Return: 0, AT_NOMEM
 sinline int insert_file_atend(Globals *globals){
-	GC8_adds(globals->atend,"FILE ", return AT_NOMEM);
+	GC8_adds(globals->atend,u8"FILE ", return AT_NOMEM);
 	GC8_adds(globals->atend,globals->kvs.strs.ppio+globals->kvs.filenames.ppio[globals->state.nfile], return AT_NOMEM);
 	Gadd(globals->atend,char8_t,'\n', return AT_NOMEM);
 	globals->state.atend_nfile=globals->state.nfile;
@@ -874,7 +874,7 @@ sinline int insert_file_atend(Globals *globals){
 
 //Return: 0 , AT_NOMEM
 static int insert_line_atend(Globals *globals, uint lc, char8_t *expanded){
-	char8_t *pe=strpcpy8(expanded,"LINE= ");
+	char8_t *pe=strpcpy8(expanded,u8"LINE= ");
 	pe=str8___uint(pe,lc); *pe++='\n';
 	uint n=(pdif)(pe-expanded); //El último carácter copiado será el '\n'
 	pe=expanded;

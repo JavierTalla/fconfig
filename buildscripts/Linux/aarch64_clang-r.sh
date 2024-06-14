@@ -1,1 +1,3 @@
-../../../buildscripts_shared/Linux/aarch64_clang-r.sh
+#!/bin/bash
+setup="arch=aarch64"
+source linux_common.sh

@@ -26,7 +26,7 @@ typedef uint8m Unidad;
 #define UNI_T_MIN 3
 
 #define MAX_UNI_LONG 10
-static const char8_t * const unidades_long[MAX_UNI_LONG+1]={"(nada)","dmm","mm","cm","(nada)","m","dter","\"'","\"","km",u8"º"};
+static const char8_t * const unidades_long[MAX_UNI_LONG+1]={u8"(nada)",u8"dmm",u8"mm",u8"cm",u8"(nada)",u8"m",u8"dter",u8"\"'",u8"\"",u8"km",u8"º"};
 
 //res
 #define MAGRES_OK 0		//Se almacenó el valor indicado de manera exacta.

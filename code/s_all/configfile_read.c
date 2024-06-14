@@ -25,7 +25,7 @@ sinline Tok_Relation rel_classify(char16_t op){
 //La palabra ha de estar terminada por un blanco
 //Si no es una keyword devuelve KW_NONE
 static KeyWord kw_classify(const char8_t *pc){
-	ifz(strbeginsby8(pc,"log")){
+	ifz(strbeginsby8(pc,u8"log")){
 		for(KeyWord k=KeyWord_Min; k<KeyWord_logTope; k++){
 			ifz(strcmp8_b(pc,KeyWords[k].name)) return k;
 		}
@@ -311,7 +311,7 @@ static bint read_umint(char8_t **pc, ErrorOpts *errors, uint lc, const char8_t *
 
 	str_no_st(*pc);
 	if(**pc!='\n' && **pc!=COMMENT_CHAR){
-		Warning_F(errors,lc,"Palabras extra ignoradas tras el comando %s",PTR);
+		Warning_F(errors,lc,u8"Palabras extra ignoradas tras el comando %s",PTR);
 		errors->war_count++;
 	}
 

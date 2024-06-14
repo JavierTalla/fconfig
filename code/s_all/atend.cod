@@ -15,7 +15,7 @@ ifKW(KW_AtEnd){
 ifKW(KW_BeginAtEnd){
 	LOGcomname(commands,LCOMMANDS);
 	if_Moreinl(buffer){
-		Warning_s(&globals->errors,buffer.lc,"Hay texto tras un comando BeginAtEnd. Se ignora");
+		Warning_s(&globals->errors,buffer.lc,u8"Hay texto tras un comando BeginAtEnd. Se ignora");
 		globals->errors.war_count++;
 	}
 	u8int nc=1;
@@ -36,10 +36,10 @@ ifKW(KW_BeginAtEnd){
 		ifz(strcmp8_b(buffer.pc,u8"BeginAtEnd")) nc++;
 		elifz(strcmp8_b(buffer.pc,u8"EndAtEnd")){ nc--;
 			ifz(nc){
-				LOG(commands,LCOMMANDS,snl,"EndAtEnd");
+				LOG(commands,LCOMMANDS,snl,u8"EndAtEnd");
 				buffer.pc+=strlen8(u8"EndAtEnd"); Advanceinline(buffer);
 				if_Moreinl(buffer){
-					Warning_s(&globals->errors,buffer.lc,"Hay texto tras un comando EndAtEnd. Se ignora");
+					Warning_s(&globals->errors,buffer.lc,u8"Hay texto tras un comando EndAtEnd. Se ignora");
 					globals->errors.war_count++;
 				}
 				break;

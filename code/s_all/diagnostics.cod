@@ -11,7 +11,7 @@ ifKW(KW_echo){
 	}else{
 		LOGindent(&globals->errors);
 		if(Blog!=NULL) towrite_stringl(Blog,expanded,'\n');
-		if(globals->errors.on){fputs(expanded,stderr); putc('\n',stderr);}
+		if(globals->errors.on){fputs((CRP)expanded,stderr); putc('\n',stderr);}
 	}
 	goto continuar;
 }
@@ -22,7 +22,7 @@ ifKW(KW_Echo){
 	Prepareline(buffer);
 	LOGindent(&globals->errors);
 	if(Blog!=NULL) towrite_stringl(Blog,buffer.pc,'\n');
-	if(globals->errors.on){fputs(buffer.pc,stderr); putc('\n',stderr);}
+	if(globals->errors.on){fputs((CRP)buffer.pc,stderr); putc('\n',stderr);}
 	resume(buffer);
 	goto continuar;
 }
@@ -60,12 +60,12 @@ ifKW(KW_show){
 	KeyVal kv=find_key_0(&globals->kvs,expanded);
 	if(kv.macro_type==MACRO_SPECIAL){
 		LOGindent(&globals->errors);
-		if(Blog!=NULL) towritef(Blog,"%s [especial] = \n",expanded);
-		if(globals->errors.on) fprintf(stderr,"%s [especial] = \n",expanded);
+		if(Blog!=NULL) towritef(Blog,u8"%s [especial] = \n",expanded);
+		if(globals->errors.on) fprintf(stderr,"%s [especial] = \n",(CRP)expanded);
 	}elif(kv.p.obj==NULL){
 		LOGindent(&globals->errors);
-		if(Blog!=NULL) towritef(Blog,"%s [undefined]\n",expanded);
-		if(globals->errors.on) fprintf(stderr,"%s [undefined]\n",expanded);
+		if(Blog!=NULL) towritef(Blog,u8"%s [undefined]\n",expanded);
+		if(globals->errors.on) fprintf(stderr,"%s [undefined]\n",(CRP)expanded);
 	}elif(kv.macro_type==MACRO_OBJECT){
 		if(Blog!=NULL) LOGmacobj(globals,kv.p.obj,true);
 		if(globals->errors.on) LOGmacobj_err(globals,kv.p.obj,true);

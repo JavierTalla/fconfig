@@ -1,1 +1,3 @@
-../../../buildscripts_shared/Linux/arm_clang-r.sh
+#!/bin/bash
+setup="arch=arm"
+source linux_common.sh

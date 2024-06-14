@@ -80,7 +80,7 @@ static inline void error_kvEntero(FConfigParse *fparse, const MacObj* kv, uint m
 static inline void error_kvsMedida(FConfigParse *fparse, const MacObj* kv, uint max_val, uint _unused(max_recom)){
 	ifzlike(fparse->errors.err) return;
 	ssint sm=kv->value.sval;
-	error_Magnitud_err(fparse->errors.err,&fparse->errors,KeyFile(G,kv),KeyLine(G,kv),KeyKey(G,kv),KeyStr(G,kv),sm<0,(uint)(sm>=0? sm:-sm),max_val,max_recom,"dmm");
+	error_Magnitud_err(fparse->errors.err,&fparse->errors,KeyFile(G,kv),KeyLine(G,kv),KeyKey(G,kv),KeyStr(G,kv),sm<0,(uint)(sm>=0? sm:-sm),max_val,max_recom,u8"dmm");
 }
 static inline void error_kvFloat(FConfigParse *fparse, const MacObj* kv, float max_val, float _unused(max_recom)){
 	ifzlike(fparse->errors.err) return;

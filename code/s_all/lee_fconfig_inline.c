@@ -34,10 +34,10 @@ static void LOGassign(Globals *globals,uint line, const KeyVal *kv, bint special
 	bint bstr=0; //Wether to output or not the com.str string.
 	const char8_t *skey=KeyVal_key(&globals->kvs,kv);
 	if(special){
-		LOG(assigns,LASSIGNS_SPECIALS,sss,skey," ",TokenAssignment[ass]);
+		LOG(assigns,LASSIGNS_SPECIALS,sss,skey,u8" ",TokenAssignment[ass]);
 		if(isLevel(assigns,LASSIGNS_SPECIALS)) bstr=1;
 	}else{
-		LOG(assigns,LASSIGNS_REGULARS_KEY,sss,skey," ",TokenAssignment[ass]);
+		LOG(assigns,LASSIGNS_REGULARS_KEY,sss,skey,u8" ",TokenAssignment[ass]);
 		if(isLevel(assigns,LASSIGNS_REGULARS_KEYVAL)) bstr=1;
 		elif(isLevel(assigns,LASSIGNS_REGULARS_KEY)){
 			if(globals->errors.blog!=NULL) toput_char(globals->errors.blog,'\n');

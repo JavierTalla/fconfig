@@ -47,7 +47,7 @@ static char8_t* expand_bufline(Bufferti8_lc *buf, char8_t expanded[MAX_LINE_EX],
 static char8_t* expand_total_bufword(Bufferti8_lc *buf, char8_t expanded[MAX_LINE_EX], KeyVals *kvs, ErrorOpts *errors, const strLog *logs){
 	next_fwd_save(*buf);
 	char8_t *pn=exptext_total_0(buf->pc,expanded,kvs,errors,GET_LINE,logs);
-	ifunlike(errors->err){ERROR(errors,"Error al expandir %s. Se expandió a %s\n",buf->pc,expanded);}
+	ifunlike(errors->err){ERROR(errors,u8"Error al expandir %s. Se expandió a %s\n",buf->pc,expanded);}
 	resume(*buf);
 	return pn;
 }
@@ -72,7 +72,7 @@ PTR: Nombre del comando en el que el texto se está expandiendo
 static char8_t* expand_buf_keyword(Bufferti8_lc *buf, char8_t expanded[MAX_LINE_EX], KeyVals *kvs, ErrorOpts *errors, const strLog *logs, const char8_t *PTR){
 	next_fwd_save(*buf);
 	exptext_total_0(buf->pc,expanded,kvs,errors,GET_LINE,logs);
-	ifunlike(errors->err){ERROR(errors,"Error al expandir %s. Se expandió a %s\n",buf->pc,expanded);}
+	ifunlike(errors->err){ERROR(errors,u8"Error al expandir %s. Se expandió a %s\n",buf->pc,expanded);}
 
 	char8_t *pc=expanded; while(isnot_stn0(*pc)) pc++;
 	if(*pc!='\0'){
@@ -105,7 +105,7 @@ PTR: Nombre del comando en el que el texto se está expandiendo
 static char8_t* expand_buf_keyword_noempty(Bufferti8_lc *buf, char8_t expanded[MAX_LINE_EX], KeyVals *kvs, ErrorOpts *errors, const strLog *logs, const char8_t *PTR){
 	next_fwd_save(*buf);
 	exptext_total_0(buf->pc,expanded,kvs,errors,GET_LINE,logs);
-	ifunlike(errors->err){ERROR(errors,"Error al expandir %s. Se expandió a %s\n",buf->pc,expanded);}
+	ifunlike(errors->err){ERROR(errors,u8"Error al expandir %s. Se expandió a %s\n",buf->pc,expanded);}
 
 	char8_t *pc=expanded;
 	ifunlike(*expanded=='\0'){

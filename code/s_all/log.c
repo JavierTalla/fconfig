@@ -9,7 +9,7 @@ static void printerr_many_strings(const char8_t *s, ...){
 	va_list ap;
 	va_start(ap,s);
 	while(s!=NULL){
-		fputs(s,stderr);
+		fputs((CRP)s,stderr);
 		s=va_arg(ap,const char8_t*);
 	}
 	va_end(ap);
@@ -27,7 +27,7 @@ void writef_Cfile(FILE *const file, const char8_t *str, ...){
 		char8_t t=*ps++;
 		if(t=='s'){
 			const char8_t *s=va_arg(ap,const char8_t*);
-			fputs(s,file);
+			fputs((CRP)s,file);
 		}else if(t=='S'){
 			t=*ps;
 			iflike(*ps!='\0') ps++;
@@ -102,7 +102,7 @@ static void log_valstr_s0(Bufferto8 *blog, bint on, const char8_t *val){
 
 sinline void log_line(Bufferto8 *blog, bint on, uint line){
 	if(line==NO_LINE) return;
-	if(blog!=NULL) towritef(blog,"(%u) ",line);
+	if(blog!=NULL) towritef(blog,u8"(%u) ",line);
 	if(on) fprintf(stderr,"(%u) ",line);
 }
 sinline void log_IL(Bufferto8 *blog, bint on, uint8m indent, uint line){
@@ -111,8 +111,8 @@ sinline void log_IL(Bufferto8 *blog, bint on, uint8m indent, uint line){
 }
 sinline void log_lineError(Bufferto8 *blog, bint on, uint line){
 	if(blog!=NULL){
-		 if(line!=NO_LINE) towritef(blog,"(%u) Error: ",line);
-		 else towrite_string(blog,"Error: ");
+		 if(line!=NO_LINE) towritef(blog,u8"(%u) Error: ",line);
+		 else towrite_string(blog,u8"Error: ");
 	}
 	if(on){
 		if(line!=NO_LINE) fprintf(stderr,"(%u) Error: ",line);
@@ -121,8 +121,8 @@ sinline void log_lineError(Bufferto8 *blog, bint on, uint line){
 }
 sinline void log_lineWarning(Bufferto8 *blog, bint on, uint line){
 	if(blog!=NULL){
-		 if(line!=NO_LINE) towritef(blog,"(%u) Warning: ",line);
-		 else towrite_string(blog,"Warning: ");
+		 if(line!=NO_LINE) towritef(blog,u8"(%u) Warning: ",line);
+		 else towrite_string(blog,u8"Warning: ");
 	}
 	if(on){
 		if(line!=NO_LINE) fprintf(stderr,"(%u) Warning: ",line);
@@ -138,22 +138,22 @@ void log_char(Bufferto8 *blog, bint on, uint8m indent, uint line, char8_t c){
 void log_s(Bufferto8 *blog, bint on, uint8m indent, uint line, const char8_t *s){
 	log_IL(blog,on,indent,line);
 	if(blog!=NULL) towrite_string(blog,s);
-	if(on) fputs(s,stderr);
+	if(on) fputs((CRP)s,stderr);
 }
 void log_snl(Bufferto8 *blog, bint on, uint8m indent, uint line, const char8_t *s){
 	log_IL(blog,on,indent,line);
 	if(blog!=NULL) towrite_stringl(blog,s,'\n');
-	if(on){fputs(s,stderr); putc('\n',stderr);}
+	if(on){fputs((CRP)s,stderr); putc('\n',stderr);}
 }
 void log_ss(Bufferto8 *blog, bint on, uint8m indent, uint line, const char8_t *s1, const char8_t *s2){
 	log_IL(blog,on,indent,line);
 	if(blog!=NULL) towrite_many_strings(blog,s1,s2,NULL);
-	if(on){fputs(s1,stderr); fputs(s2,stderr);}
+	if(on){fputs((CRP)s1,stderr); fputs((CRP)s2,stderr);}
 }
 void log_ssnl(Bufferto8 *blog, bint on, uint8m indent, uint line, const char8_t *s1, const char8_t *s2){
 	log_IL(blog,on,indent,line);
-	if(blog!=NULL) towrite_many_strings(blog,s1,s2,"\n",NULL);
-	if(on){fputs(s1,stderr); fputs(s2,stderr); putc('\n',stderr);}
+	if(blog!=NULL) towrite_many_strings(blog,s1,s2,u8"\n",NULL);
+	if(on){fputs((CRP)s1,stderr); fputs((CRP)s2,stderr); putc('\n',stderr);}
 }
 #define log_sss(blog,on,indent,line,...) do{log_IL(blog,on,indent,line);\
 	if(blog!=NULL) towrite_many_strings(blog,__VA_ARGS__,NULL);\
@@ -233,8 +233,8 @@ f:		format string, ...
 static void log_cmdline(const ErrorOpts *errors, uint line, const char8_t *PTR, Bufferti8_lc *buf){
 	log_IL(errors->blog,errors->on,errors->indent,line);
 	Prepareline(*buf);
-	if(errors->blog!=NULL) towritef(errors->blog,"%s %s\n",PTR,buf->pc);
-	if(errors->on) fprintf(stderr,"%s %s\n",PTR,buf->pc);
+	if(errors->blog!=NULL) towritef(errors->blog,u8"%s %s\n",PTR,buf->pc);
+	if(errors->on) fprintf(stderr,"%s %s\n",(CRP)PTR,(CRP)buf->pc);
 	*buf->next=buf->savedchar;
 }
 
@@ -244,11 +244,11 @@ static void log_openfile(Globals *globals, const char8_t *fconfig){
 	if(isLevel(fich,1)){
 		log_indent(globals->errors.blog,globals->errors.on,globals->errors.indent);
 		if(fconfig!=NULL){
-			if(globals->errors.blog!=NULL) towrite_many_strings(globals->errors.blog,u8"(Archivo ",fconfig,"\n",NULL);
-			if(globals->errors.on) printerr_many_strings(u8"(Archivo ",fconfig,"\n",NULL);
+			if(globals->errors.blog!=NULL) towrite_many_strings(globals->errors.blog,u8"(Archivo ",fconfig,u8"\n",NULL);
+			if(globals->errors.on) printerr_many_strings(u8"(Archivo ",fconfig,u8"\n",NULL);
 		}else{
 			if(globals->errors.blog!=NULL) towrite_string(globals->errors.blog,u8"(Archivo anónimo\n");
-			if(globals->errors.on) fprintf(stderr,u8"(Archivo anónimo\n");
+			if(globals->errors.on) fprintf(stderr,(CRP)u8"(Archivo anónimo\n");
 		}
 	}
 }
@@ -260,13 +260,13 @@ static void log_closefile(Globals *globals, const char8_t *fconfig, bool bstoppe
 
 	log_indent(globals->errors.blog,globals->errors.on,globals->errors.indent);
 	if(fconfig!=NULL){
-		if(globals->errors.blog!=NULL) towrite_many_strings(globals->errors.blog,pfin,fconfig,")\n\n",NULL);
-		if(globals->errors.on) printerr_many_strings(pfin,fconfig,")\n\n",NULL);
+		if(globals->errors.blog!=NULL) towrite_many_strings(globals->errors.blog,pfin,fconfig,u8")\n\n",NULL);
+		if(globals->errors.on) printerr_many_strings(pfin,fconfig,u8")\n\n",NULL);
 	}else{
 		if(globals->errors.blog!=NULL) towrite_many_strings(globals->errors.blog,pfin,u8"anónimo)\n\n",NULL);
 		if(globals->errors.on){
-			if(!bstopped) fprintf(stderr,u8"fin del archivo anónimo)\n\n");
-			else fprintf(stderr,u8"fin de la lectura del archivo anónimo)\n\n");
+			if(!bstopped) fprintf(stderr,(CRP)u8"fin del archivo anónimo)\n\n");
+			else fprintf(stderr,(CRP)u8"fin de la lectura del archivo anónimo)\n\n");
 		}
 	}
 }
@@ -291,6 +291,6 @@ static void log_closefile(Globals *globals, const char8_t *fconfig, bool bstoppe
 
 //varname '\0'-ended, varstr '\0'-ended
 #define  wrong_var_00(errors, varname, varstr) do{iferrwar(errors,LERR){\
-	LOG_sss(errors,NO_LINE,INDENT_SHRT u8"Al expandir la variable: ",varname," = ");\
+	LOG_sss(errors,NO_LINE,INDENT_SHRT u8"Al expandir la variable: ",varname,u8" = ");\
 	log_valstr_s0((errors)->blog,(errors)->on,varstr);\
 }}while(0)

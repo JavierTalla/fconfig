@@ -1,1 +1,3 @@
-../../../buildscripts_shared/Linux/clang-r.sh
+#!/bin/bash
+setup=""
+source linux_common.sh

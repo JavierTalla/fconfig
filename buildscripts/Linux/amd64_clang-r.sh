@@ -1,1 +1,3 @@
-../../../buildscripts_shared/Linux/amd64_clang-r.sh
+#!/bin/bash
+setup="arch=amd64"
+source linux_common.sh

@@ -29,8 +29,8 @@ ifunlike(*expanded=='\n') goto ignorar_línea;
 char8_t *pe=expanded; str_no_st(pe);
 
 ifKW(KW_logging){
-	ifVAL("off") globals->errors.blog=NULL;
-	elifVAL("on"){globals->errors.blog=globals->BLOG; LOG(commands,LCOMMANDS,s,u8"Activado el log\n");}
+	ifVAL(u8"off") globals->errors.blog=NULL;
+	elifVAL(u8"on"){globals->errors.blog=globals->BLOG; LOG(commands,LCOMMANDS,s,u8"Activado el log\n");}
 	else{
 		WARNING(&globals->errors,u8"Tras la plabra \"logging\" tiene que venir \"on\" o \"off\". Se encontró \"%Ss\"",expanded);
 		globals->errors.war_count++;
@@ -41,9 +41,9 @@ ifKW(KW_logging){
 ifKW(KW_logonline){
 	if(*pe=='\n'){globals->errors.on=1; LOG(commands,LCOMMANDSALL,snl,KeyWords[kwass.kw].name);}
 	else{
-		LOG(commands,LCOMMANDSALL,f,"%s %Ss\n",KeyWords[kwass.kw].name,pe);
-		ifVAL("on") globals->errors.on=1;
-		elifVAL("off") globals->errors.on=0;
+		LOG(commands,LCOMMANDSALL,f,u8"%s %Ss\n",KeyWords[kwass.kw].name,pe);
+		ifVAL(u8"on") globals->errors.on=1;
+		elifVAL(u8"off") globals->errors.on=0;
 		else{
 			WARNING(&globals->errors,u8"Tras la plabra \"logonline\" tiene que venir \"on\", \"off\" o nada. Se encontró \"%Ss\"",expanded);
 			globals->errors.war_count++;
@@ -54,7 +54,7 @@ ifKW(KW_logonline){
 
 ifKW(KW_logerrors){
 	bint b=read_umint(&pe,&globals->errors,buffer.lc,PTR,&globals->errors.err_war,2,HI_LEVEL_HIGHEST);
-	if(!b){LOG(commands,LCOMMANDS,f,"%s %u\n",KeyWords[kwass.kw].name,globals->errors.err_war);}
+	if(!b){LOG(commands,LCOMMANDS,f,u8"%s %u\n",KeyWords[kwass.kw].name,globals->errors.err_war);}
 	goto continuar;
 }
 
@@ -72,7 +72,7 @@ if(kwass.kw>=KeyWord_LogcasesMin && kwass.kw<KeyWord_LogcasesTope){
 	}
 	umint *p=(umint*)((char*)&globals->log+k);
 	bint b=read_umint(&pe,&globals->errors,buffer.lc,PTR,p,3,HI_LEVEL_HIGHEST);
-	if(!b){LOG(commands,LCOMMANDS,f,"%s %u\n",KeyWords[kwass.kw].name,*p);}
+	if(!b){LOG(commands,LCOMMANDS,f,u8"%s %u\n",KeyWords[kwass.kw].name,*p);}
 	goto continuar;
 }
 

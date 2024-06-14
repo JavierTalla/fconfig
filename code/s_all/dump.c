@@ -23,7 +23,7 @@ static void close_keystr(Bufferto8 *buf, bint bblank, bint bnl, const char8_t *p
 	if(bblank) toput_char(buf,'}');
 	elif(bnl){
 		if(p[-1]=='\n') toput_char(buf,'}');
-		elif(indent==0) towrite_string(buf,"\n}n");
+		elif(indent==0) towrite_string(buf,u8"\n}n");
 		else{toput_char(buf,'\n');
 			indent_log(buf,indent);
 			toput_char(buf,'}'); toput_char(buf,'n');
@@ -139,7 +139,7 @@ static void dump_macobj_val(Bufferto8 *buf, const MacObj *kv, const KeyVals *kvs
 static void dump_macobj(Bufferto8 *buf, const MacObj *kv, const KeyVals *kvs){
 	char8_t *p=KeyKeyp(kv);
 	if(*p=='\0') return; //Clave eliminada
-	towritef(buf,"%s = ",p);
+	towritef(buf,u8"%s = ",p);
 	dump_macobj_val(buf,kv,kvs,0);
 }
 
@@ -157,7 +157,7 @@ static void dump_macobj_val_stderr(const MacObj *kv, const KeyVals *kvs, u8int i
 static void dump_macobj_stderr(const MacObj *kv, const KeyVals *kvs){
 	char8_t *p=KeyKeyp(kv);
 	if(*p=='\0') return; //Clave eliminada
-	fprintf(stderr,"%s = ",p);
+	fprintf(stderr,"%s = ",(CRP)p);
 	dump_macobj_val_stderr(kv,kvs,0);
 }
 
@@ -174,7 +174,7 @@ static void dump_macobj_val_stdout(const MacObj *kv, const KeyVals *kvs){
 static void dump_macobj_stdout(const MacObj *kv, const KeyVals *kvs){
 	char8_t *p=KeyKeyp(kv);
 	if(*p=='\0') return; //Clave eliminada
-	printf("%s = ",p);
+	printf("%s = ",(CRP)p);
 	dump_macobj_val_stdout(kv,kvs);
 }
 
@@ -184,7 +184,7 @@ static void LOGmacobj(Globals *globals,const MacObj *kv, bint bindent){
 	u8int indent= bindent ? globals->errors.indent : 0;
 
 	indent_log(globals->errors.blog,indent);
-	towritef(globals->errors.blog,"%s [%s] = ",p,TypesStrings[kv->value.type]);
+	towritef(globals->errors.blog,u8"%s [%s] = ",p,TypesStrings[kv->value.type]);
 	dump_macobj_val(globals->errors.blog,kv,&globals->kvs,indent);
 }
 static void LOGmacobj_err(Globals *globals,const MacObj *kv, bint bindent){
@@ -193,7 +193,7 @@ static void LOGmacobj_err(Globals *globals,const MacObj *kv, bint bindent){
 	u8int indent= bindent ? globals->errors.indent : 0;
 
 	indent_err(indent);
-	fprintf(stderr,"%s [%s] = ",p,TypesStrings[kv->value.type]);
+	fprintf(stderr,"%s [%s] = ",(CRP)p,(CRP)TypesStrings[kv->value.type]);
 	dump_macobj_val_stderr(kv,&globals->kvs,indent);
 }
 
@@ -234,7 +234,7 @@ sinline char8_t* do_write_funstr0_stdout(iconst char8_t *str, const char8_t *arg
 		elif(c==KV_Substitute){
 			putchar('#');
 			const char8_t *arg=get_arg(arg_names,*str++-'1');
-			putchar('('); fputs(arg,stdout); putchar(')');
+			putchar('('); fputs((CRP)arg,stdout); putchar(')');
 		}
 	}
 	return (ICONST char8_t *)str;
@@ -253,7 +253,7 @@ static char8_t* do_write_funstr0_stderr_indent(iconst char8_t *str, const char8_
 		}else{
 			putc('#',stderr);
 			const char8_t *arg=get_arg(arg_names,*str++-'1');
-			putc('(',stderr); fputs(arg,stderr); putc(')',stderr);
+			putc('(',stderr); fputs((CRP)arg,stderr); putc(')',stderr);
 		}
 	}
 	return (ICONST char8_t *)str;
@@ -261,7 +261,7 @@ static char8_t* do_write_funstr0_stderr_indent(iconst char8_t *str, const char8_
 
 static void dump_macfun_args(Bufferto8 *buf, const MacFun *kv, const KeyVals *kvs){
 	uint8m n=kv->nargs;
-	if(n==0){towrite_string(buf,"() = "); return;}
+	if(n==0){towrite_string(buf,u8"() = "); return;}
 
 	 n--;
 	const char8_t *arg=kvs->strs.ppio+kv->args;
@@ -270,7 +270,7 @@ static void dump_macfun_args(Bufferto8 *buf, const MacFun *kv, const KeyVals *kv
 		while(*arg!='\0') arg++; arg++;
 		toput_char(buf,','); towrite_string(buf,arg);
 	}
-	towrite_string(buf,") = ");
+	towrite_string(buf,u8") = ");
 }
 
 static void dump_macfun_val(Bufferto8 *buf, const MacFun *kv, const KeyVals *kvs, u8int indent){
@@ -298,10 +298,10 @@ static void dump_macfun_args_FILE(const MacFun *kv, const KeyVals *kvs, FILE *st
 
 	n--;
 	const char8_t *arg=kvs->strs.ppio+kv->args;
-	putc('(',strm); fputs(arg,strm);
+	putc('(',strm); fputs((CRP)arg,strm);
 	while(n>=1){n--;
 		while(*arg!='\0') arg++; arg++;
-			putc(',',strm); fputs(arg,strm);
+			putc(',',strm); fputs((CRP)arg,strm);
 	}
 	fputs(") = ",strm);
 }
@@ -319,7 +319,7 @@ static void dump_macfun_val_stderr(const MacFun *kv, const KeyVals *kvs, u8int i
 static void dump_macfun_stderr(const MacFun *kv, const KeyVals *kvs){
 	char8_t *p=KeyKeyp(kv);
 	if(*p=='\0') return; //Clave eliminada
-	fputs(p,stderr);
+	fputs((CRP)p,stderr);
 	dump_macfun_args_FILE(kv,kvs,stderr);
 	dump_macfun_val_stderr(kv,kvs,0);
 }
@@ -337,7 +337,7 @@ static void dump_macfun_val_stdout(const MacFun *kv, const KeyVals *kvs){
 static void dump_macfun_stdout(const MacFun *kv, const KeyVals *kvs){
 	char8_t *p=KeyKeyp(kv);
 	if(*p=='\0') return; //Clave eliminada
-	fputs(p,stdout);
+	fputs((CRP)p,stdout);
 	dump_macfun_args_FILE(kv,kvs,stdout);
 	dump_macfun_val_stdout(kv,kvs);
 }
@@ -358,7 +358,7 @@ static void LOGmacfun_err(Globals *globals,const MacFun *kv, bint bindent){
 	u8int indent= bindent ? globals->errors.indent : 0;
 
 	indent_err(indent);
-	fputs(p,stderr);
+	fputs((CRP)p,stderr);
 	dump_macfun_args_FILE(kv,&globals->kvs,stderr);
 	dump_macfun_val_stderr(kv,&globals->kvs,indent);
 }

@@ -24,9 +24,9 @@ typedef enum{REL_NONE=0,
 
 //"0=", etc. se toman como tokens si están separados de la palabra precedente
 static const char8_t * const TokenAssignment[]={
-	[ASS_NONE]="",
-	[ASS_Eq]="=",
-	[ASS_EqDef]=":=",
+	[ASS_NONE]=u8"",
+	[ASS_Eq]=u8"=",
+	[ASS_EqDef]=u8":=",
 };
 
 static char16_t const TokenRelation[]={
@@ -39,8 +39,8 @@ static char16_t const TokenRelation[]={
 	[REL_Geq]=u'≥',
 };
 static char8_t const *const TokenRelationStr[]={
-	[REL_NONE]="",
-	[REL_Eq]="=",
+	[REL_NONE]=u8"",
+	[REL_Eq]=u8"=",
 	[REL_Neq]=u8"≠",
 	[REL_Less]=u8"<",
 	[REL_Leq]=u8"≤",
@@ -140,17 +140,17 @@ la palabra tras la asignación, si la hay; si no hay, a la palabra que sigue a l
 parece una ignación. Si es así constituye un error.
 */
 
-#define DEFKEmpty(k) [KW_##k]={#k, 0}
-#define DEFKVal(k) [KW_##k]={#k, KWFLAG_Somethig|KWFLAG_Assignment}
-#define DEFKBareVal(k) [KW_##k]={#k, KWFLAG_Somethig}
-#define DEFKName(k) [KW_##k]={#k, KWFLAG_Somethig|KWFLAG_AssTex}
-#define DEFKPureText(k) [KW_##k]={#k, KWFLAG_Somethig|KWFLAG_Texto}
+#define DEFKEmpty(k) [KW_##k]={u8"" #k, 0}
+#define DEFKVal(k) [KW_##k]={u8"" #k, KWFLAG_Somethig|KWFLAG_Assignment}
+#define DEFKBareVal(k) [KW_##k]={u8"" #k, KWFLAG_Somethig}
+#define DEFKName(k) [KW_##k]={u8"" #k, KWFLAG_Somethig|KWFLAG_AssTex}
+#define DEFKPureText(k) [KW_##k]={u8"" #k, KWFLAG_Somethig|KWFLAG_Texto}
 
 static const struct KeyWordProps{
 	const char8_t * const name;
 	uint flags;
 } KeyWords[KeyWord_Max+1]={
-	[KW_NONE]={"",KWFLAG_Assignment}, //No tiene KWFLAG_Somethig. No es necesario que siga nada
+	[KW_NONE]={u8"",KWFLAG_Assignment}, //No tiene KWFLAG_Somethig. No es necesario que siga nada
 	DEFKName(logging),
 	DEFKEmpty(logonline),
 	DEFKEmpty(loggingall),
@@ -190,7 +190,7 @@ static const struct KeyWordProps{
 	DEFKEmpty(Else),
 	DEFKName(Elif),
 	DEFKEmpty(Endif),
-	[KW_AtEnd]={"AtEnd",KWFLAG_Texto}, //nothing need follow. If follows, as text.
+	[KW_AtEnd]={u8"AtEnd",KWFLAG_Texto}, //nothing need follow. If follows, as text.
 	DEFKEmpty(BeginAtEnd),
 	DEFKEmpty(EndAtEnd),
 };

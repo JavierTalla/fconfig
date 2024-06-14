@@ -34,11 +34,11 @@ sinline void log_indent(Bufferto8 *blog, bint on, uint8m indent){
 
 #define Write_Diagnostic(blog,on,line,Diag,s,...) \
 	if(line==NO_LINE){\
-		if(blog!=NULL) towritef(blog, Diag ": " s "\n", __VA_ARGS__); \
-		if(on) writef_Cfile(stderr, Diag ": " s "\n", __VA_ARGS__); \
+		if(blog!=NULL) towritef(blog, Diag u8": " s "\n", __VA_ARGS__); \
+		if(on) writef_Cfile(stderr, Diag u8": " s "\n", __VA_ARGS__); \
 	}else{\
-		towritef(blog, "(%u) " Diag ": " s "\n", line, __VA_ARGS__); \
-		if(on) writef_Cfile(stderr, "(%u) " Diag ": " s "\n", line, __VA_ARGS__);\
+		towritef(blog, u8"(%u) " Diag ": " s "\n", line, __VA_ARGS__); \
+		if(on) writef_Cfile(stderr, u8"(%u) " Diag ": " s "\n", line, __VA_ARGS__);\
 	}
 #define Write_Error(blog,on,indent,line,s,...) do{log_indent(blog,on,indent); Write_Diagnostic(blog,on,line,"Error",s, __VA_ARGS__)}while(0)
 #define Write_Warning(blog,on,indent,line,s,...) do{log_indent(blog,on,indent); Write_Diagnostic(blog,on,line,"Warning",s, __VA_ARGS__)}while(0)

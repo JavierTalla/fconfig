@@ -30,35 +30,35 @@ void lee_unidad(const char8_t **pc, LongitudLeída *tl, enum TipoMagnitud typeM)
 	if(**pc=='\0') return;
 	switch(typeM){
 	case Magnitud_Tabla:
-		ifVALpc("dmm") tl->uni=UNI_DMM, *pc+=3;
-		elifVALpc("mm") tl->uni=UNI_MM, *pc+=2;
-		elifVALpc("cm") tl->uni=UNI_CM, *pc+=2;
-		elifVALpc("m") tl->uni=UNI_M, (*pc)++;
+		ifVALpc(u8"dmm") tl->uni=UNI_DMM, *pc+=3;
+		elifVALpc(u8"mm") tl->uni=UNI_MM, *pc+=2;
+		elifVALpc(u8"cm") tl->uni=UNI_CM, *pc+=2;
+		elifVALpc(u8"m") tl->uni=UNI_M, (*pc)++;
 		break;
 	case Magnitud_TierraZ:
-		ifVALpc("cm") tl->uni=UNI_CM, *pc+=2;
-		elifVALpc("m") tl->uni=UNI_M, (*pc)++;
+		ifVALpc(u8"cm") tl->uni=UNI_CM, *pc+=2;
+		elifVALpc(u8"m") tl->uni=UNI_M, (*pc)++;
 		break;
 	case Magnitud_TierraPeq:
-		ifVALpc("cm") tl->uni=UNI_CM, *pc+=2;
-		elifVALpc("m") tl->uni=UNI_M, (*pc)++;
-		elifVALpc("\"") tl->uni=UNI_ARC_SEG, (*pc)++;
-		elifVALpc("\"'") tl->uni=UNI_ARC_TER, *pc+=2;
-		elifVALpc("'\"") tl->uni=UNI_ARC_TER, *pc+=2;
-		elifVALpc("dter") tl->uni=UNI_ARC_DTER, *pc+=4;
-		elifVALpc("mm") tl->uni=UNI_INVALID, *pc+=2;
-		elif(isVALpc("Km") || isVALpc("km")) tl->uni=UNI_INVALID, *pc+=2;
+		ifVALpc(u8"cm") tl->uni=UNI_CM, *pc+=2;
+		elifVALpc(u8"m") tl->uni=UNI_M, (*pc)++;
+		elifVALpc(u8"\"") tl->uni=UNI_ARC_SEG, (*pc)++;
+		elifVALpc(u8"\"'") tl->uni=UNI_ARC_TER, *pc+=2;
+		elifVALpc(u8"'\"") tl->uni=UNI_ARC_TER, *pc+=2;
+		elifVALpc(u8"dter") tl->uni=UNI_ARC_DTER, *pc+=4;
+		elifVALpc(u8"mm") tl->uni=UNI_INVALID, *pc+=2;
+		elif(isVALpc(u8"Km") || isVALpc(u8"km")) tl->uni=UNI_INVALID, *pc+=2;
 		break;
 	case Magnitud_TierraGrande:
-		ifVALpc("m") tl->uni=UNI_M, (*pc)++;
-		elif(isVALpc("Km") || isVALpc("km")) tl->uni=UNI_KM, (*pc)+=2;
-		elifVALpc("\"") tl->uni=UNI_ARC_SEG, (*pc)++;
+		ifVALpc(u8"m") tl->uni=UNI_M, (*pc)++;
+		elif(isVALpc(u8"Km") || isVALpc(u8"km")) tl->uni=UNI_KM, (*pc)+=2;
+		elifVALpc(u8"\"") tl->uni=UNI_ARC_SEG, (*pc)++;
 		elifVALpc(u8"°") tl->uni=UNI_ARC_GRADOS, (*pc)++;
 		break;
 	case Magnitud_Tiempo:
-		ifVALpc("ms") tl->uni=UNI_T_MSEC, *pc+=2;
-		elifVALpc("s") tl->uni=UNI_T_SEC, (*pc)++;
-		elifVALpc("m") tl->uni=UNI_T_MIN, (*pc)++;
+		ifVALpc(u8"ms") tl->uni=UNI_T_MSEC, *pc+=2;
+		elifVALpc(u8"s") tl->uni=UNI_T_SEC, (*pc)++;
+		elifVALpc(u8"m") tl->uni=UNI_T_MIN, (*pc)++;
 		break;
 	}
 	if(tl->uni==UNI_ABSENT){

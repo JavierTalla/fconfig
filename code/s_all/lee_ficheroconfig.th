@@ -11,6 +11,7 @@
 #include <stdarg.h>
 VISIBILITY_BLOCK_module
 #include "../include_internal/ficheroconfigh.h"
+#define CRP const char*
 #include "log.c"
 #include "leer_Magnitud.c"
 #include "leevalida_Magnitud.c"
@@ -23,6 +24,7 @@ VISIBILITY_BLOCK_module
 #include "configfile_read.c"
 #include "addto_kvs.c"
 #include "lee_fconfig_inline.c"
+#undef CRP
 #include "lee_ficheroconfig.c"
 //For users. Not used internally
 #include "parse_fromkv.c"

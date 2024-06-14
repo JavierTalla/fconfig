@@ -37,8 +37,8 @@ if(*pp=='('){
 }
 bad_syntax:
 
-ifzunlike(strcmp8(PTR,"replace")) bad_name=1;
-else ifzunlike(strcmp8(PTR,"Replace")) bad_name=1;
+ifzunlike(strcmp8(PTR,u8"replace")) bad_name=1;
+else ifzunlike(strcmp8(PTR,u8"Replace")) bad_name=1;
 
 ifunlike(bad_name || bad_syntax) ignore_def=1;
 elif(globals->state.override && find_key_0(&globals->kvs,PTR).p.obj!=NULL) ignore_def=1;
@@ -103,7 +103,7 @@ if(*buffer.pc=='{'){
 	if(pbrace!=NULL){ //Single line string
 		if(_unlikely(bbrace) && !ignore_def){
 			savecharnext(buffer);
-			WARNING(&globals->errors,"Caracteres inesperados tras el último '}' en la línea de asignación de %s: %s",PTR,buffer.pc);
+			WARNING(&globals->errors,u8"Caracteres inesperados tras el último '}' en la línea de asignación de %s: %s",PTR,buffer.pc);
 			globals->errors.war_count++;
 			*buffer.next=buffer.savedchar;
 		}
@@ -230,7 +230,7 @@ if(*buffer.pc=='{' && pbrace==NULL){ //Multiline string
 }
 globals->errors.err=0;
 
-{char *ptr=globals->kvs.strs.ppio+com->str,
+{char8_t *ptr=globals->kvs.strs.ppio+com->str,
 		*end=globals->kvs.strs.next;
 while(ptr!=end && *ptr!=KV_BeginExpand) ptr++;
 com->exp_pending=(*ptr==KV_BeginExpand);

@@ -1,7 +1,7 @@
 ifKW(KW_remove){
 	expand_buf_keyword_noempty(&buffer,expanded,&globals->kvs,&globals->errors,&globals->log,PTR);
 	ifunlike(globals->errors.err==VAR_INVALID_NAME) goto continuar;
-	LOG(commands,LCOMMANDS,ssnl,"remove ",expanded);
+	LOG(commands,LCOMMANDS,ssnl,u8"remove ",expanded);
 	hBase8WhereKey *ph=geth_hBase8WhereKey(&globals->kvs.hash,expanded);
 	if(ph!=NULL){
 		if(ph->data.macro_type==MACRO_SPECIAL){
@@ -24,7 +24,7 @@ ifKW(KW_remove){
 //La nueva calve apunta al mismo espacio de memoria que la antigua. En el futuro, si una clave modificada no se realoja, habrá
 //que cambiar esto. De momento cleanspaces ya es así, pero nunca se usa.
 ifKW(KW_copyroot){
-	if(isLevel(assigns,LASSIGNS_REGULARS_KEY)){LOG(assigns,LASSIGNS_REGULARS_KEY,f,"%s %Sn\n",PTR,buffer.pc);}
+	if(isLevel(assigns,LASSIGNS_REGULARS_KEY)){LOG(assigns,LASSIGNS_REGULARS_KEY,f,u8"%s %Sn\n",PTR,buffer.pc);}
 	else{LOGcomname(commands,LCOMMANDSALL);}
 	bint b; //Si se ha encontrado alguna clave con la raíz j.
 	struct{
@@ -143,7 +143,7 @@ ifKW(KW_cleanspaces){
 
 ifKW(KW_type){
 	umint type;
-	LOG(commands,LCOMMANDS,f,"%s %Sn\n",PTR,buffer.pc);
+	LOG(commands,LCOMMANDS,f,u8"%s %Sn\n",PTR,buffer.pc);
 
 	char8_t *pclave=buffer.pc;
 	expand_buf_keyword_noempty(&buffer,expanded,&globals->kvs,&globals->errors,&globals->log,PTR);
@@ -169,11 +169,11 @@ ifKW(KW_type){
 		goto error_y_continuar;
 	}
 	prepare_string(buffer);
-	ifz(strcmp8(buffer.pc,"string")) type=VAL_TYPE_string;
-	elifz(strcmp8(buffer.pc,"bool")) type=VAL_TYPE_bool;
-	elifz(strcmp8(buffer.pc,"entero")) type=VAL_TYPE_uint;
-	elifz(strcmp8(buffer.pc,"medida")) type=VAL_TYPE_sMedida;
-	elifz(strcmp8(buffer.pc,"float")) type=VAL_TYPE_float;
+	ifz(strcmp8(buffer.pc,u8"string")) type=VAL_TYPE_string;
+	elifz(strcmp8(buffer.pc,u8"bool")) type=VAL_TYPE_bool;
+	elifz(strcmp8(buffer.pc,u8"entero")) type=VAL_TYPE_uint;
+	elifz(strcmp8(buffer.pc,u8"medida")) type=VAL_TYPE_sMedida;
+	elifz(strcmp8(buffer.pc,u8"float")) type=VAL_TYPE_float;
 	else{
 		type=VAL_TYPE_unknown;
 		ERROR(&globals->errors,u8"Se ha pedido asignar a %Sb el tipo %s. Ese tipo no existe",pclave,buffer.pc);

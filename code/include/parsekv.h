@@ -159,7 +159,7 @@ filename puede ser NULL*/
 static inline MagnitudValidada consume_Medida_dmm(iconst char8_t **pc, uint max_val, uint max_recom, ErrorOpts *errors, const char8_t* fieldname, const char8_t *filename, uint line){
 	const char8_t * const pstr=*pc;
 	MagnitudValidada d=lee_valida_uLongitudTabla(pc,max_val,max_recom,UNI_DMM);
-	error_Magnitud(d.err,errors,filename,line,fieldname,pstr,d.val,max_val,max_recom,"dmm");
+	error_Magnitud(d.err,errors,filename,line,fieldname,pstr,d.val,max_val,max_recom,u8"dmm");
 	errors->err=d.err;
 	return d;
 }
@@ -191,7 +191,7 @@ filename puede ser NULL*/
 static inline sMagnitudValidada consume_sMedida_dmm(iconst char8_t **pc, uint max_val, uint max_recom, ErrorOpts *errors, const char8_t* fieldname, const char8_t *filename, uint line){
 	const char8_t * const pstr=*pc;
 	sMagnitudValidada d=lee_valida_sLongitudTabla(pc,max_val,max_recom,UNI_DMM);
-	error_sMagnitud(d.err,errors,filename,line,fieldname,pstr,d.val,max_val,max_recom,"dmm");
+	error_sMagnitud(d.err,errors,filename,line,fieldname,pstr,d.val,max_val,max_recom,u8"dmm");
 	errors->err=d.err;
 
 	return d;
@@ -204,7 +204,7 @@ filename puede ser NULL*/
 static inline MagnitudValidada consume_Medida_cm(iconst char8_t **pc, uint max_val, uint max_recom, ErrorOpts *errors, const char8_t* fieldname, const char8_t *filename, uint line){
 	const char8_t * const pstr=*pc;
 	MagnitudValidada d=lee_valida_uLongitudTabla(pc,max_val,max_recom,UNI_CM);
-	error_Magnitud(d.err,errors,filename,line,fieldname,pstr,d.val,max_val,max_recom,"cm");
+	error_Magnitud(d.err,errors,filename,line,fieldname,pstr,d.val,max_val,max_recom,u8"cm");
 	errors->err=d.err;
 	return d;
 }
@@ -216,7 +216,7 @@ filename puede ser NULL*/
 static inline MagnitudValidada consume_TierraZ_m(iconst char8_t **pc, uint max_val, uint max_recom, ErrorOpts *errors, const char8_t* fieldname, const char8_t *filename, uint line){
 	const char8_t * const pstr=*pc;
 	MagnitudValidada d=lee_valida_uLongitudTierraZ(pc,max_val,max_recom,UNI_M);
-	error_Magnitud(d.err,errors,filename,line,fieldname,pstr,d.val,max_val,max_recom,"m");
+	error_Magnitud(d.err,errors,filename,line,fieldname,pstr,d.val,max_val,max_recom,u8"m");
 	errors->err=d.err;
 	return d;
 }
@@ -228,7 +228,7 @@ filename puede ser NULL*/
 static inline MagnitudValidada consume_TierraPeq_cm(iconst char8_t **pc, uint max_val, uint max_recom, ErrorOpts *errors, const char8_t* fieldname, const char8_t *filename, uint line){
 	const char8_t * const pstr=*pc;
 	MagnitudValidada d=lee_valida_uLongitudTierraPeq(pc,max_val,max_recom,UNI_CM);
-	error_Magnitud(d.err,errors,filename,line,fieldname,pstr,d.val,max_val,max_recom,"cm");
+	error_Magnitud(d.err,errors,filename,line,fieldname,pstr,d.val,max_val,max_recom,u8"cm");
 	errors->err=d.err;
 	return d;
 }
@@ -240,7 +240,7 @@ filename puede ser NULL*/
 static inline MagnitudValidada consume_TierraPeq_m(iconst char8_t **pc, uint max_val, uint max_recom, ErrorOpts *errors, const char8_t* fieldname, const char8_t *filename, uint line){
 	const char8_t * const pstr=*pc;
 	MagnitudValidada d=lee_valida_uLongitudTierraPeq(pc,max_val,max_recom,UNI_M);
-	error_Magnitud(d.err,errors,filename,line,fieldname,pstr,d.val,max_val,max_recom,"m");
+	error_Magnitud(d.err,errors,filename,line,fieldname,pstr,d.val,max_val,max_recom,u8"m");
 	errors->err=d.err;
 	return d;
 }
@@ -252,7 +252,7 @@ filename puede ser NULL*/
 static inline MagnitudValidada consume_TierraGra_m(iconst char8_t **pc, uint max_val, uint max_recom, ErrorOpts *errors, const char8_t* fieldname, const char8_t *filename, uint line){
 	const char8_t * const pstr=*pc;
 	MagnitudValidada d=lee_valida_uLongitudTierraGra(pc,max_val,max_recom,UNI_M);
-	error_Magnitud(d.err,errors,filename,line,fieldname,pstr,d.val,max_val,max_recom,"m");
+	error_Magnitud(d.err,errors,filename,line,fieldname,pstr,d.val,max_val,max_recom,u8"m");
 	errors->err=d.err;
 	return d;
 }
@@ -263,7 +263,7 @@ filename puede ser NULL*/
 static inline MagnitudValidada consume_Tiempo_s(iconst char8_t **pc, uint max_val, uint max_recom, ErrorOpts *errors, const char8_t* fieldname, const char8_t *filename, uint line){
 	const char8_t * const pstr=*pc;
 	MagnitudValidada d=lee_valida_uTiempo(pc,max_val,max_recom,UNI_T_SEC);
-	error_Magnitud(d.err,errors,filename,line,fieldname,pstr,d.val,max_val,max_recom,"s");
+	error_Magnitud(d.err,errors,filename,line,fieldname,pstr,d.val,max_val,max_recom,u8"s");
 	errors->err=d.err;
 	return d;
 }
