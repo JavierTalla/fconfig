@@ -10,6 +10,7 @@ EXPORTS
 	lee_valida_sLongitudTabla
 	lee_valida_LongitudTierraZ
 	lee_valida_uLongitudTierraZ
+	lee_valida_sLongitudTierraZ
 	lee_valida_LongitudTierraPeq
 	lee_valida_uLongitudTierraPeq
 	lee_valida_sLongitudTierraPeq
