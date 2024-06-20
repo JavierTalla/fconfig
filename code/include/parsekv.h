@@ -53,6 +53,7 @@ extern sMagnitudValidada lee_valida_sLongitudTabla(iconst char8_t **pc, uint max
 'uni' es las unidades en las que se almacenará en d.val. Puede ser UNI_M o UNI_CM */
 extern MagnitudValidada lee_valida_LongitudTierraZ(iconst char8_t **pc, uint max_val, uint max_recom, uint8m uni);
 extern MagnitudValidada lee_valida_uLongitudTierraZ(iconst char8_t **pc, uint max_val, uint max_recom, uint8m uni);
+extern sMagnitudValidada lee_valida_sLongitudTierraZ(iconst char8_t **pc, uint max_val, uint max_recom, uint8m uni);
 
 /* Las unidades en las que esté expresado el dato pueden ser m, cm, segundos de arco, terceros de arco o décimas de tercero.
 'uni' es las unidades en las que se almacenará en d.val. Puede ser UNI_M o UNI_CM */
@@ -193,7 +194,6 @@ static inline sMagnitudValidada consume_sMedida_dmm(iconst char8_t **pc, uint ma
 	sMagnitudValidada d=lee_valida_sLongitudTabla(pc,max_val,max_recom,UNI_DMM);
 	error_sMagnitud(d.err,errors,filename,line,fieldname,pstr,d.val,max_val,max_recom,u8"dmm");
 	errors->err=d.err;
-
 	return d;
 }
 
@@ -205,6 +205,18 @@ static inline MagnitudValidada consume_Medida_cm(iconst char8_t **pc, uint max_v
 	const char8_t * const pstr=*pc;
 	MagnitudValidada d=lee_valida_uLongitudTabla(pc,max_val,max_recom,UNI_CM);
 	error_Magnitud(d.err,errors,filename,line,fieldname,pstr,d.val,max_val,max_recom,u8"cm");
+	errors->err=d.err;
+	return d;
+}
+
+/*Parsea la cadena pc, que puede contener más datos que lo que se va a leer, pero en cualquier caso tiene que terminar en '\0'.
+Las unidades presentes en la cadena pc pueden ser m o cm. El dato se guarda como un entero en m.
+Si se produce un error actualiza errors y escribe el mensaje de error, mostrando fieldname y, si no es NULL, filename.
+filename puede ser NULL*/
+static inline sMagnitudValidada consume_sTierraZ_m(iconst char8_t **pc, uint max_val, uint max_recom, ErrorOpts *errors, const char8_t* fieldname, const char8_t *filename, uint line){
+	const char8_t * const pstr=*pc;
+	sMagnitudValidada d=lee_valida_sLongitudTierraZ(pc,max_val,max_recom,UNI_M);
+	error_Magnitud(d.err,errors,filename,line,fieldname,pstr,d.val,max_val,max_recom,u8"m");
 	errors->err=d.err;
 	return d;
 }

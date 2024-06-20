@@ -132,6 +132,14 @@ MagnitudValidada lee_valida_uLongitudTierraZ(iconst char8_t **pc, uint max_val, 
 	return d;
 }
 
+sMagnitudValidada lee_valida_sLongitudTierraZ(iconst char8_t **pc, uint max_val, uint max_recom, uint8m uni){
+	bint bneg=0; if(**pc=='-') bneg=1, (*pc)++;
+	MagnitudValidada d=lee_valida_LongitudTierraZ(pc,max_val,max_recom,uni);
+	sMagnitudValidada sd=(sMagnitudValidada){.val=(ssint)d.val,.err=d.err};
+	ifunlike(d.err!=ERR_VAL_NONUMBER && bneg) sd.val=-sd.val;
+	return sd;
+}
+
 /* Las unidades en las que esté exresado el dato pueden ser m, cm, segundos de arco, terceros de arco o décimas de tercero.
 'uni' puede ser UNI_M o UNI_CM */
 MagnitudValidada lee_valida_LongitudTierraPeq(iconst char8_t **pc, uint max_val, uint max_recom, uint8m uni){

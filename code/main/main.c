@@ -26,6 +26,7 @@ int main(int _unused(argc), charmain_t **_argv){
 	charfile_t** const ARGV=argv; //Para escribir en el log.
 	FicheroConfig config;
 
+
 #ifdef _DEBUG
 	getchar();
 #endif

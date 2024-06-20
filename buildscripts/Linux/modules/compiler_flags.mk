@@ -76,11 +76,12 @@ endif
 
 endif
 
+#The compilers diagnos missmatch in signedness from unsigned char* to char*, which is wrong since -funsigned-char is passed
 ifeq ($(compiler),clang)
-CFLAGS+= -fno-show-column -Wpedantic -Wall -Wextra
+CFLAGS+= -fno-show-column -Wpedantic -Wall -Wextra -Wno-pointer-sign
 #-Weverything
 else ifeq ($(compiler),gcc)
-CFLAGS+= -fno-show-column -Wpedantic -Wall -Wextra
+CFLAGS+= -fno-show-column -Wpedantic -Wall -Wextra -Wno-pointer-sign
 else
 CFLAGS+= -Wall
 endif

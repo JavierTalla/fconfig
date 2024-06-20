@@ -1,4 +1,4 @@
-#define BANNER "Programa 'ficheroconfig', parseador de ficheros fconfig, " __DATE__
+#define BANNER u8"Programa 'ficheroconfig', parseador de ficheros fconfig, " __DATE__
 
 /* Logging */
 #if FILE_PREFERRED_ENCODING==FILE_ENCODING_BIT8
@@ -18,7 +18,9 @@
 	#define path_clean path_clean16
 #endif
 
-#define PUTerr(s)  fputs(s,stderr)
+//#define PUTerr(s)  fputs(s,stderr)
+//To enforce type checking
+static inline void PUTerr(const char8_t *s){fputs((const char*)s,stderr);}
 #define PUTerrnl(s) PUTerr(s), fputc('\n',stderr)
 
 struct OutDir{
